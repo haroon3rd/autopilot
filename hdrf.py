@@ -315,3 +315,8 @@ print("All resources allocated")
 print_leaf_node_details(root)
 
 
+# Test Section
+abc = config.get("CONFIG", "resource_type")
+d = abc.split(",")
+print(d[0])
+
