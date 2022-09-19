@@ -30,14 +30,6 @@ n22_lte_dem = 25
 
 leaf_nodes = ["N11", "N21", "N22"]
 
-share_dem.update({"epc": {"cpu": 0, "mem": 0, "lte": 0}})
-share_dem.update({"vs": {"cpu": 0, "mem": 0, "lte": 0}})
-share_dem.update({"dl": {"cpu": 0, "mem": 0, "lte": 0}})
-
-resource_left.update({"cpu": 1000})
-resource_left.update({"mem": 1000})
-resource_left.update({"lte": 80})
-
 # A class that represents an individual node in a
 # Binary Tree
 
@@ -51,8 +43,18 @@ class myNode:
         self.dem_lte = dem_lte
         self.cpu_share = 0
         self.lte_share = 0
-        self.dem_vect = 0
+        self.cpu_dem_vect = 0
+        self.lte_dem_vect = 0
         self.dom_share = 0
+
+# Driver code
+root = myNode("N", 0, 0)
+root.left = myNode("N1", 0, 0)
+root.right = myNode("N2", 0, 0)
+root.left.left = myNode("N11", n11_cpu_dem, n11_lte_dem)
+root.left.right = None
+root.right.left = myNode("N21", n21_cpu_dem, n21_lte_dem)
+root.right.right = myNode("N22", n22_cpu_dem, n22_lte_dem)
 
 
 def isLeafNode(root):
@@ -78,7 +80,9 @@ def print_leaf_node_details(root):
         # then print the data of node
         if root.name in leaf_nodes:
             print(root.name + " " + str(root.dem_cpu) + " " + str(root.dem_lte)),
-            log(INFO, "Node " + root.name + " - CPU Demand: " + str(root.dem_cpu) + ", LTE Demand: " + str(root.dem_lte) + ", CPU Share: " + str(root.cpu_share) + ", LTE Share: " + str(root.lte_share) + ", CPU Dem Vector: " + str(root.dem_vect) + ", CPU Dom Share: " + str(root.dom_share))
+            log(INFO, "Node " + root.name + " - CPU Demand: " + str(root.dem_cpu) + ", LTE Demand: " + str(root.dem_lte) +
+             ", CPU Share: " + str(root.cpu_share) + ", LTE Share: " + str(root.lte_share) +
+             ", CPU Dem Vector: " + str(root.cpu_dem_vect) + ", LTE Dem Vector: " + str(root.lte_dem_vect) + ", Dom Share: " + str(root.dom_share))
         # now recur on right child
         print_leaf_node_details(root.right)
 
@@ -123,9 +127,22 @@ def get_cpu_demand_vector(root):
         # First recur on left child
         get_cpu_demand_vector(root.left)
         # then print the data of node
-        root.dem_vect = (root.dem_cpu/float(total_cpu_demands)*100)
-        dem_vect_dict.update({root.name: root.dem_vect})
+        if root.dem_cpu > 0:
+            root.cpu_dem_vect = (root.dem_cpu/float(total_cpu_demands)*100)
+            cpu_dem_vect_dict.update({root.name: root.cpu_dem_vect})
         get_cpu_demand_vector(root.right)
+
+# A function to do inorder tree traversal and return a dict of cpu demands
+def get_lte_demand_vector(root):
+    if root:
+        # First recur on left child
+        get_lte_demand_vector(root.left)
+        # then print the data of node
+        if root.dem_lte > 0:
+            root.lte_dem_vect = (root.dem_lte/float(total_lte_demands)*100)
+            lte_dem_vect_dict.update({root.name: root.lte_dem_vect})
+        
+        get_lte_demand_vector(root.right)
 
 def update_parent_demand(root):
     if root and not isLeafNode(root):
@@ -153,7 +170,7 @@ def print_parent_demands(root):
     if root and not isLeafNode(root):
         # First recur on left child
         print_parent_demands(root.left) 
-        print(root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))   
+        log(INFO, root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))   
         print_parent_demands(root.right)
 
 def allocate_cpu(root):
@@ -211,15 +228,6 @@ def update_config_file():
         config.write(configFile)
 
 
-# Driver code
-root = myNode("N", 0, 0)
-root.left = myNode("N1", 0, 0)
-root.right = myNode("N2", 0, 0)
-root.left.left = myNode("N11", n11_cpu_dem, n11_lte_dem)
-root.left.right = None
-root.right.left = myNode("N21", n21_cpu_dem, n21_lte_dem)
-root.right.right = myNode("N22", n22_cpu_dem, n22_lte_dem)
-
 parent_dict = {}
 parent_list = []
 
@@ -238,13 +246,14 @@ log(INFO, "**********************************************")
 t_cpu = int(config.get("TOTALRES", "cpu"))
 t_mem = int(config.get("TOTALRES", "mem"))
 t_lte = int(config.get("TOTALRES", "lte"))
-c_cpu = 0
-c_mem = 0
-c_lte = 0
+c_cpu = int(config.get("INITALLOC", "cpu"))
+c_mem = int(config.get("INITALLOC", "mem"))
+c_lte = int(config.get("INITALLOC", "lte"))
 
 cpu_dem_dict = {}
 lte_dem_dict = {}
-dem_vect_dict = {}
+cpu_dem_vect_dict = {}
+lte_dem_vect_dict = {}
 dom_share_dict = {}
 
 # Get the parent nodes
@@ -274,7 +283,7 @@ print_parent_demands(root)
 
 get_cpu_demand_vector(root)
 print("Printing Demand Vector Dict:")
-print(dem_vect_dict)
+print(cpu_dem_vect_dict)
 
 cpu_alloc_delta = cpu_delta/float(min(cpu_dem_dict.values()))
 log(INFO,"CPU Allocation Delta: " + str(cpu_alloc_delta))
@@ -282,6 +291,10 @@ log(INFO,"CPU Allocation Delta: " + str(cpu_alloc_delta))
 cpu_break = False
 while c_cpu < t_cpu and not cpu_break:
     allocate_cpu(root)
+
+get_lte_demand_vector(root)
+print("Printing Demand Vector Dict:")
+print(lte_dem_vect_dict)
 
 lte_alloc_delta = lte_delta/float(min(lte_dem_dict.values()))
 log(INFO,"LTE Allocation Delta: " + str(lte_alloc_delta))
