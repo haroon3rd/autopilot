@@ -79,10 +79,12 @@ def print_leaf_node_details(root):
         print_leaf_node_details(root.left)
         # then print the data of node
         if root.name in leaf_nodes:
-            print(root.name + " " + str(root.dem_cpu) + " " + str(root.dem_lte)),
-            log(INFO, "Node " + root.name + " - CPU Demand: " + str(root.dem_cpu) + ", LTE Demand: " + str(root.dem_lte) +
-             ", CPU Share: " + str(root.cpu_share) + ", LTE Share: " + str(root.lte_share) +
-             ", CPU Dem Vector: " + str(root.cpu_dem_vect) + ", LTE Dem Vector: " + str(root.lte_dem_vect) + ", Dom Share: " + str(root.dom_share))
+            print("Node " + root.name + " - (CPU:LTE) Demand: [" + str(root.dem_cpu) + "," + str(root.dem_lte) +
+             "], (CPU , LTE) Share: [" + str(root.cpu_share) + "," + str(root.lte_share) +
+             "], (CPU:LTE) Dem Vector: [" + str(root.cpu_dem_vect) + "," + str(root.lte_dem_vect) + "], Dom Share: " + str(root.dom_share)),
+            log(INFO, "Node " + root.name + " - (CPU:LTE) Demand: [" + str(root.dem_cpu) + "," + str(root.dem_lte) +
+             "], (CPU , LTE) Share: [" + str(root.cpu_share) + "," + str(root.lte_share) +
+             "], (CPU:LTE) Dem Vector: [" + str(root.cpu_dem_vect) + "," + str(root.lte_dem_vect) + "], Dom Share: " + str(root.dom_share))
         # now recur on right child
         print_leaf_node_details(root.right)
 
@@ -278,12 +280,12 @@ total_lte_demands = sum(lte_dem_dict.values())
 log(INFO,"Total LTE demands: " + str(total_lte_demands))
 
 update_parent_demand(root)
-print("Printing Parent Demands:")
+# print("Printing Parent Demands:")
 print_parent_demands(root)
 
 get_cpu_demand_vector(root)
-print("Printing Demand Vector Dict:")
-print(cpu_dem_vect_dict)
+log(INFO, "Printing CPU Demand Vector Dict:")
+log(INFO, cpu_dem_vect_dict)
 
 cpu_alloc_delta = cpu_delta/float(min(cpu_dem_dict.values()))
 log(INFO,"CPU Allocation Delta: " + str(cpu_alloc_delta))
@@ -293,8 +295,8 @@ while c_cpu < t_cpu and not cpu_break:
     allocate_cpu(root)
 
 get_lte_demand_vector(root)
-print("Printing Demand Vector Dict:")
-print(lte_dem_vect_dict)
+log(INFO, "Printing LTE Demand Vector Dict:")
+log(INFO, lte_dem_vect_dict)
 
 lte_alloc_delta = lte_delta/float(min(lte_dem_dict.values()))
 log(INFO,"LTE Allocation Delta: " + str(lte_alloc_delta))
@@ -302,6 +304,12 @@ log(INFO,"LTE Allocation Delta: " + str(lte_alloc_delta))
 lte_break = False
 while c_lte < t_lte and not lte_break:
     allocate_lte(root)
+
+
+# Lets update the config file
+config.set("FINALLOC", "cpu", str(c_cpu))
+config.set("FINALLOC", "lte", str(c_lte))
+update_config_file()
 
 print("All resources allocated")
 print_leaf_node_details(root)
