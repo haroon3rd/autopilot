@@ -1,9 +1,9 @@
 import configparser
 import logging
-import pickle
 import sys
-from queue import Empty
+from collections import deque
 import re
+import json
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -34,6 +34,9 @@ CRIT = logging.CRITICAL
 # A class that represents an individual node in a Tree
 # AnyTree
 
+
+
+
 class anyTree:
     def __init__(self, name):
         self.children = []
@@ -44,14 +47,53 @@ class anyTree:
         self.children.append(child)
         child.parent = self
 
+def preTravTree(root):
+ 
+    Stack = deque([])
+    # 'Preorder'-> contains all the
+    # visited nodes.
+    Preorder =[] 
+    Preorder.append(root.name)
+    Stack.append(root)
+    while len(Stack)>0:
+        # 'Flag' checks whether all the child
+        # nodes have been visited.
+        flag = 0
+        # CASE 1- If Top of the stack is a leaf
+        # node then remove it from the stack:
+        if len((Stack[len(Stack)-1]).children)== 0:
+            X = Stack.pop()
+            # CASE 2- If Top of the stack is
+            # Parent with children:
+        else:
+            Par = Stack[len(Stack)-1]
+        # a)As soon as an unvisited child is
+        # found(left to right sequence),
+        # Push it to Stack and Store it in
+        # Auxiliary List(Marked Visited)
+        # Start Again from Case-1, to explore
+        # this newly visited child
+        for i in range(0, len(Par.children)):
+            if Par.children[i].name not in Preorder:
+                flag = 1
+                Stack.append(Par.children[i])
+                Preorder.append(Par.children[i].name)
+                break;
+                # b)If all Child nodes from left to right
+                # of a Parent have been visited
+                # then remove the parent from the stack.
+        if flag == 0:
+            Stack.pop()
+    print(Preorder)
 
-def build_tree(parent_list, child_list):
+def build_tree(parents, childs):
     global root
     root = anyTree("N")
-    root.left = anyTree("N1")
-    root.right = anyTree("N2")
-    root.right.left = anyTree("N21")
-    root.right.right = anyTree("N22")
+    for i in range (int(parents)):
+        root.add_child(anyTree("N"+str(i+1)))
+        for child in range (int(childs[i])):
+            root.children[i].add_child(anyTree("N"+str(i+1)+str(child+1)))
+    preTravTree(root)
 
 
 # Binary Tree Class
@@ -255,12 +297,6 @@ parent_dict = {}
 parent_list = []
 
 
-
-
-
-
-
-
 #Radu code
 
 def parse_config_vector(s):
@@ -270,14 +306,17 @@ def parse_config_vector(s):
 
 def init_from_config(iniFile):
     total_children = 0
-    
     config = configparser.ConfigParser()
+    global parents
+    global childs
     try:
         config.read(iniFile)
-        print("Nodes:\t\t" + config.get("NODES", "parents"))
+        parents = config.get("NODES", "parents")
+        print("Nodes:\t\t" + parents)
 
         ###
         children_list =  parse_config_vector(config.get("NODES", "children"))
+        childs = children_list
         for i in children_list:
             total_children += int(i)
         print("Children:\t" + ' '.join(children_list), "=", total_children, "(total)")
@@ -301,25 +340,40 @@ def init_from_config(iniFile):
             print(delta_list)
 
         ###
-        demand_list =  parse_config_vector(config.get("RESOURCES", "demand"))
-        print("Demand: \t" + ' '.join(demand_list))
-        if(total_children != len(demand_list)):
-           print("Number of nodes and list of demands do not match:", total_children, ',', len(demand_list))
+        demand_list = []
+        all_demand_list =  (config.get("RESOURCES", "demand")).split('/')
+        if(total_children != len(all_demand_list)):
+           print("Number of nodes and list of demands do not match:", total_children, ',', len(all_demand_list))
+        else:
+            for mylist in all_demand_list:
+                demand_list.append(list(mylist.split(",")))
+        print(demand_list)
+        
+
+        ###
+        # global parents
+        # parents = config.get("NODES", "parents") 
+        # global childs
+        # childs = config.get("NODES", "childs")
+        # print ("Parents: " + parents + " and Childs: " + str(type(childs)))
            
     except Exception as e:
         print("Error (" + type(e).__name__ + ") with config file: " + str(e))
         sys.exit()
 
 
-
+parents = 0
+childs = []
 
 #Main Function
-    
+
+   
 if (len(sys.argv) != 2):
      print("Usage: python3 hdrf.py <config-file>")
      sys.exit()
 else:
     init_from_config(sys.argv[1])
+    build_tree(parents,childs)
 
 sys.exit()
 
