@@ -1,8 +1,9 @@
 import configparser
 import logging
-# from logging import log
 import pickle
+import sys
 from queue import Empty
+import re
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -11,27 +12,47 @@ ERR = logging.ERROR
 CRIT = logging.CRITICAL
 
 
-share_dem = {}
-resource_left = {}
+# share_dem = {}
+# resource_left = {}
 
-cur_node = None
-cpu_delta = 50
-lte_delta = 5
+# cur_node = None
+# cpu_delta = 50
+# lte_delta = 5
 
 
-""" Make changes here to change the results """
-n11_cpu_dem = 200
-n21_cpu_dem = 250
-n22_cpu_dem = 250
+# """ Make changes here to change the results """
+# n11_cpu_dem = 200
+# n21_cpu_dem = 250
+# n22_cpu_dem = 250
 
-n11_lte_dem = 0
-n21_lte_dem = 25
-n22_lte_dem = 25
+# n11_lte_dem = 0
+# n21_lte_dem = 25
+# n22_lte_dem = 25
 
-leaf_nodes = ["N11", "N21", "N22"]
+# leaf_nodes = ["N11", "N21", "N22"]
 
-# A class that represents an individual node in a
-# Binary Tree
+# A class that represents an individual node in a Tree
+# AnyTree
+
+class anyTree:
+    def __init__(self, name):
+        self.children = []
+        self.parent = None
+        self.name = name
+        
+    def add_child(self, child):
+        self.children.append(child)
+        child.parent = self
+
+
+def build_tree(parent_list, child_list):
+    global root
+    root = anyTree("N")
+    root.left = anyTree("N1")
+    root.right = anyTree("N2")
+    root.right.left = anyTree("N21")
+    root.right.right = anyTree("N22")
+
 
 # Binary Tree Class
 class myNode:
@@ -47,14 +68,16 @@ class myNode:
         self.lte_dem_vect = 0
         self.dom_share = 0
 
-# Driver code
-root = myNode("N", 0, 0)
-root.left = myNode("N1", 0, 0)
-root.right = myNode("N2", 0, 0)
-root.left.left = myNode("N11", n11_cpu_dem, n11_lte_dem)
-root.left.right = None
-root.right.left = myNode("N21", n21_cpu_dem, n21_lte_dem)
-root.right.right = myNode("N22", n22_cpu_dem, n22_lte_dem)
+
+
+# # Driver code
+# root = myNode("N", 0, 0)
+# root.left = myNode("N1", 0, 0)
+# root.right = myNode("N2", 0, 0)
+# root.left.left = myNode("N11", n11_cpu_dem, n11_lte_dem)
+# root.left.right = None
+# root.right.left = myNode("N21", n21_cpu_dem, n21_lte_dem)
+# root.right.right = myNode("N22", n22_cpu_dem, n22_lte_dem)
 
 
 def isLeafNode(root):
@@ -79,12 +102,10 @@ def print_leaf_node_details(root):
         print_leaf_node_details(root.left)
         # then print the data of node
         if root.name in leaf_nodes:
-            print("Node " + root.name + " - (CPU:LTE) Demand: [" + str(root.dem_cpu) + "," + str(root.dem_lte) +
-             "], (CPU , LTE) Share: [" + str(root.cpu_share) + "," + str(root.lte_share) +
-             "], (CPU:LTE) Dem Vector: [" + str(root.cpu_dem_vect) + "," + str(root.lte_dem_vect) + "], Dom Share: " + str(root.dom_share)),
-            log(INFO, "Node " + root.name + " - (CPU:LTE) Demand: [" + str(root.dem_cpu) + "," + str(root.dem_lte) +
-             "], (CPU , LTE) Share: [" + str(root.cpu_share) + "," + str(root.lte_share) +
-             "], (CPU:LTE) Dem Vector: [" + str(root.cpu_dem_vect) + "," + str(root.lte_dem_vect) + "], Dom Share: " + str(root.dom_share))
+            print(root.name + " " + str(root.dem_cpu) + " " + str(root.dem_lte)),
+            log(INFO, "Node " + root.name + " - CPU Demand: " + str(root.dem_cpu) + ", LTE Demand: " + str(root.dem_lte) +
+             ", CPU Share: " + str(root.cpu_share) + ", LTE Share: " + str(root.lte_share) +
+             ", CPU Dem Vector: " + str(root.cpu_dem_vect) + ", LTE Dem Vector: " + str(root.lte_dem_vect) + ", Dom Share: " + str(root.dom_share))
         # now recur on right child
         print_leaf_node_details(root.right)
 
@@ -224,20 +245,87 @@ def allocate_lte(root):
 def log(level, message):
     logging.log(level, message)
 
-# Write to config file
-def update_config_file():
-    with open('hdrf_config.conf', 'w') as configFile:
-        config.write(configFile)
+# # Write to config file
+# def update_config_file():
+#     with open('hdrf_config.conf', 'w') as configFile:
+#         config.write(configFile)
 
 
 parent_dict = {}
 parent_list = []
 
 
-# Main Algorithm
 
-config = configparser.ConfigParser()
-config.read('hdrf_config.conf')
+
+
+
+
+
+#Radu code
+
+def parse_config_vector(s):
+    # print("parsing: " + s)
+    return re.split(r',', s[1:-1])
+    
+
+def init_from_config(iniFile):
+    total_children = 0
+    
+    config = configparser.ConfigParser()
+    try:
+        config.read(iniFile)
+        print("Nodes:\t\t" + config.get("NODES", "parents"))
+
+        ###
+        children_list =  parse_config_vector(config.get("NODES", "children"))
+        for i in children_list:
+            total_children += int(i)
+        print("Children:\t" + ' '.join(children_list), "=", total_children, "(total)")
+
+        ###
+        resource_types = parse_config_vector(config.get("RESOURCES", "types"))
+        print("Resources: \t" + ' '.join(resource_types))
+
+        ###
+        initial_qty_list = parse_config_vector(config.get("RESOURCES", "initial-qty"))
+        print("Initial qty: \t" + ' '.join(initial_qty_list))
+        if(len(resource_types) != len(initial_qty_list)):
+           print("Number of resurces and initial qty resources do not match")
+
+        ###
+        delta_list =  parse_config_vector(config.get("RESOURCES", "delta"))
+        print("Delta: \t\t" + ' '.join(delta_list))
+        if(len(resource_types) != len(delta_list)):
+           print("Number of resurces and list of deltas do not match")
+        else:
+            print(delta_list)
+
+        ###
+        demand_list =  parse_config_vector(config.get("RESOURCES", "demand"))
+        print("Demand: \t" + ' '.join(demand_list))
+        if(total_children != len(demand_list)):
+           print("Number of nodes and list of demands do not match:", total_children, ',', len(demand_list))
+           
+    except Exception as e:
+        print("Error (" + type(e).__name__ + ") with config file: " + str(e))
+        sys.exit()
+
+
+
+
+#Main Function
+    
+if (len(sys.argv) != 2):
+     print("Usage: python3 hdrf.py <config-file>")
+     sys.exit()
+else:
+    init_from_config(sys.argv[1])
+
+sys.exit()
+
+
+
+"""
 
 # Logger configuration
 logLevel = config.get("LOGGING", "level")
@@ -280,12 +368,12 @@ total_lte_demands = sum(lte_dem_dict.values())
 log(INFO,"Total LTE demands: " + str(total_lte_demands))
 
 update_parent_demand(root)
-# print("Printing Parent Demands:")
+print("Printing Parent Demands:")
 print_parent_demands(root)
 
 get_cpu_demand_vector(root)
-log(INFO, "Printing CPU Demand Vector Dict:")
-log(INFO, cpu_dem_vect_dict)
+print("Printing Demand Vector Dict:")
+print(cpu_dem_vect_dict)
 
 cpu_alloc_delta = cpu_delta/float(min(cpu_dem_dict.values()))
 log(INFO,"CPU Allocation Delta: " + str(cpu_alloc_delta))
@@ -295,8 +383,8 @@ while c_cpu < t_cpu and not cpu_break:
     allocate_cpu(root)
 
 get_lte_demand_vector(root)
-log(INFO, "Printing LTE Demand Vector Dict:")
-log(INFO, lte_dem_vect_dict)
+print("Printing Demand Vector Dict:")
+print(lte_dem_vect_dict)
 
 lte_alloc_delta = lte_delta/float(min(lte_dem_dict.values()))
 log(INFO,"LTE Allocation Delta: " + str(lte_alloc_delta))
@@ -305,18 +393,8 @@ lte_break = False
 while c_lte < t_lte and not lte_break:
     allocate_lte(root)
 
-
-# Lets update the config file
-config.set("FINALLOC", "cpu", str(c_cpu))
-config.set("FINALLOC", "lte", str(c_lte))
-update_config_file()
-
 print("All resources allocated")
 print_leaf_node_details(root)
 
-
-# Test Section
-abc = config.get("CONFIG", "resource_type")
-d = abc.split(",")
-print(d[0])
+"""
 
