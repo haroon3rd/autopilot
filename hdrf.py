@@ -35,56 +35,19 @@ CRIT = logging.CRITICAL
 # AnyTree
 
 
-
-
 class anyTree:
     def __init__(self, name):
         self.children = []
         self.parent = None
         self.name = name
+        self.cpu_dem_vect = 0
+        self.lte_dem_vect = 0
+        self.mem_dem_vect = 0
+        self.dom_share = 0
         
     def add_child(self, child):
         self.children.append(child)
         child.parent = self
-
-def preTravTree(root):
- 
-    Stack = deque([])
-    # 'Preorder'-> contains all the
-    # visited nodes.
-    Preorder =[] 
-    Preorder.append(root.name)
-    Stack.append(root)
-    while len(Stack)>0:
-        # 'Flag' checks whether all the child
-        # nodes have been visited.
-        flag = 0
-        # CASE 1- If Top of the stack is a leaf
-        # node then remove it from the stack:
-        if len((Stack[len(Stack)-1]).children)== 0:
-            X = Stack.pop()
-            # CASE 2- If Top of the stack is
-            # Parent with children:
-        else:
-            Par = Stack[len(Stack)-1]
-        # a)As soon as an unvisited child is
-        # found(left to right sequence),
-        # Push it to Stack and Store it in
-        # Auxiliary List(Marked Visited)
-        # Start Again from Case-1, to explore
-        # this newly visited child
-        for i in range(0, len(Par.children)):
-            if Par.children[i].name not in Preorder:
-                flag = 1
-                Stack.append(Par.children[i])
-                Preorder.append(Par.children[i].name)
-                break;
-                # b)If all Child nodes from left to right
-                # of a Parent have been visited
-                # then remove the parent from the stack.
-        if flag == 0:
-            Stack.pop()
-    print(Preorder)
 
 def build_tree(parents, childs):
     global root
@@ -93,121 +56,94 @@ def build_tree(parents, childs):
         root.add_child(anyTree("N"+str(i+1)))
         for child in range (int(childs[i])):
             root.children[i].add_child(anyTree("N"+str(i+1)+str(child+1)))
+    # Lets print the tree for debugging
     preTravTree(root)
 
-
-# Binary Tree Class
-class myNode:
-    def __init__(self, name, dem_cpu, dem_lte):
-        self.left = None
-        self.right = None
-        self.name = name
-        self.dem_cpu = dem_cpu
-        self.dem_lte = dem_lte
-        self.cpu_share = 0
-        self.lte_share = 0
-        self.cpu_dem_vect = 0
-        self.lte_dem_vect = 0
-        self.dom_share = 0
-
-
-
-# # Driver code
-# root = myNode("N", 0, 0)
-# root.left = myNode("N1", 0, 0)
-# root.right = myNode("N2", 0, 0)
-# root.left.left = myNode("N11", n11_cpu_dem, n11_lte_dem)
-# root.left.right = None
-# root.right.left = myNode("N21", n21_cpu_dem, n21_lte_dem)
-# root.right.right = myNode("N22", n22_cpu_dem, n22_lte_dem)
-
-
 def isLeafNode(root):
-    if root.left is None and root.right is None:
+    if len(root.children) == 0:
         return True
     else:
         return False
-# A function to do inorder tree traversal and print the nodes
-def printInorder(root):
-    if root:
-        # First recur on left child
-        printInorder(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes:
-            print(root.name + " " + str(root.dem_cpu) + " " + str(root.dem_lte)),
-        # now recur on right child
-        printInorder(root.right)
 
-def print_leaf_node_details(root):
-    if root:
-        # First recur on left child
-        print_leaf_node_details(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes:
-            print(root.name + " " + str(root.dem_cpu) + " " + str(root.dem_lte)),
-            log(INFO, "Node " + root.name + " - CPU Demand: " + str(root.dem_cpu) + ", LTE Demand: " + str(root.dem_lte) +
-             ", CPU Share: " + str(root.cpu_share) + ", LTE Share: " + str(root.lte_share) +
-             ", CPU Dem Vector: " + str(root.cpu_dem_vect) + ", LTE Dem Vector: " + str(root.lte_dem_vect) + ", Dom Share: " + str(root.dom_share))
-        # now recur on right child
-        print_leaf_node_details(root.right)
 
-# A function to do inorder tree traversal and return a dict of cpu demands
-def get_parent_dict(root):
-    if root and not isLeafNode(root):
-        # First recur on left child
-        get_parent_dict(root.left)
-        if root.left is not None and root.right is not None:
-            parent_dict.update({root.name: [root.left.name, root.right.name]})
-        elif root.left is not None:
-            parent_dict.update({root.name: [root.left.name]})   
+def preTravTree(root):
+ 
+    Stack = deque([])
+    # 'Preorder'-> contains all the visited nodes.
+    Preorder =[] 
+    Preorder.append(root.name)
+    Stack.append(root)
+    while len(Stack)>0:
+        # 'Flag' checks whether all the child nodes have been visited.
+        flag = 0
+        # CASE 1- If Top of the stack is a leaf node then remove it from the stack:
+        if len((Stack[len(Stack)-1]).children)== 0:
+            X = Stack.pop()
+            # CASE 2- If Top of the stack is Parent with children:
         else:
-            parent_dict.update({root.name: [root.right.name]})    
-        get_parent_dict(root.right)
+            Par = Stack[len(Stack)-1]
+        # a)As soon as an unvisited child is found(left to right sequence),
+        # Push it to Stack and Store it in Auxiliary List(Marked Visited)
+        # Start Again from Case-1, to explore this newly visited child
+        for i in range(0, len(Par.children)):
+            if Par.children[i].name not in Preorder:
+                flag = 1
+                Stack.append(Par.children[i])
+                Preorder.append(Par.children[i].name)
+                break;
+                # b)If all Child nodes from left to right of a Parent have been visited
+                # then remove the parent from the stack.
+        if flag == 0:
+            Stack.pop()
+    print(Preorder)
 
-# A function to do inorder tree traversal and return a dict of cpu demands
-def get_cpu_demand(root):
-    if root:
-        # First recur on left child
-        get_cpu_demand(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes and root.dem_cpu > 0:
-            cpu_dem_dict.update({root.name: root.dem_cpu})
-        # now recur on right child
-        get_cpu_demand(root.right)
+def assign_resource_share(root, resource):
+    global parents
+    global demand_list
+    child_count = 0
+    for i in range (int(parents)):
+        for child in range (int(childs[i])):
+            current_list = demand_list[child_count]
+            if resource == "cpu":
+                cpu = int(current_list[0])    
+                if cpu != 0:
+                    cpu_dem_dict.update({root.children[i].children[child].name : cpu})
+            elif resource == "mem":
+                mem = int(current_list[1])
+                if mem != 0:
+                    mem_dem_dict.update({root.children[i].children[child].name : mem})
+            elif resource == "bw":
+                lte = int(current_list[2])
+                if lte != 0:
+                    lte_dem_dict.update({root.children[i].children[child].name : lte})
+            child_count += 1
+    if resource == "cpu":
+        print(cpu_dem_dict)
+    elif resource == "mem":
+        print(mem_dem_dict)
+    elif resource == "bw":
+        print(lte_dem_dict)
 
-# A function to do inorder tree traversal and return a dict of cpu demands
-def get_lte_demand(root):
-    if root:
-        # First recur on left child
-        get_lte_demand(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes and root.dem_lte > 0:
-            lte_dem_dict.update({root.name: root.dem_lte})
-        # now recur on right child
-        get_lte_demand(root.right)
+def calculate_deltas(delta_list, resource):
+    global cpu_delta
+    global lte_delta
+    global mem_delta
+    if resource == "cpu":
+        cpu_alloc_delta = int(delta_list[0])/float(min(cpu_dem_dict.values()))
+        deltas.update({"cpu" : cpu_alloc_delta})
+        log(INFO,"CPU Allocation Delta: " + str(cpu_alloc_delta))
+    elif resource == "mem":
+        mem_alloc_delta = int(delta_list[1])/float(min(mem_dem_dict.values()))
+        deltas.update({"mem" : mem_alloc_delta})
+        log(INFO,"MEM Allocation Delta: " + str(mem_alloc_delta))
+    elif resource == "bw":
+        lte_alloc_delta = int(delta_list[2])/float(min(lte_dem_dict.values()))
+        deltas.update({"bw" : lte_alloc_delta})
+        log(INFO,"BW Allocation Delta: " + str(lte_alloc_delta))
 
-# A function to do inorder tree traversal and return a dict of cpu demands
-def get_cpu_demand_vector(root):
-    if root:
-        # First recur on left child
-        get_cpu_demand_vector(root.left)
-        # then print the data of node
-        if root.dem_cpu > 0:
-            root.cpu_dem_vect = (root.dem_cpu/float(total_cpu_demands)*100)
-            cpu_dem_vect_dict.update({root.name: root.cpu_dem_vect})
-        get_cpu_demand_vector(root.right)
 
-# A function to do inorder tree traversal and return a dict of cpu demands
-def get_lte_demand_vector(root):
-    if root:
-        # First recur on left child
-        get_lte_demand_vector(root.left)
-        # then print the data of node
-        if root.dem_lte > 0:
-            root.lte_dem_vect = (root.dem_lte/float(total_lte_demands)*100)
-            lte_dem_vect_dict.update({root.name: root.lte_dem_vect})
-        
-        get_lte_demand_vector(root.right)
+
+
 
 def update_parent_demand(root):
     if root and not isLeafNode(root):
@@ -238,49 +174,6 @@ def print_parent_demands(root):
         log(INFO, root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))   
         print_parent_demands(root.right)
 
-def allocate_cpu(root):
-    global c_cpu
-    global cpu_break
-    global t_cpu
-    if root:
-        # First recur on left child
-        allocate_cpu(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes and root.dem_cpu > 0:
-            cpu_to_allocate = float(root.dem_cpu)*cpu_alloc_delta
-            log(DEBUG, "Trying to Allocate " + str(cpu_to_allocate) + " to " + root.name)
-            if cpu_to_allocate <= t_cpu - c_cpu:
-                root.cpu_share = float(root.cpu_share) + cpu_to_allocate
-                c_cpu += cpu_to_allocate
-            else :
-                cpu_break = True
-                log(DEBUG, "CPU allocation break due to insufficient resources")
-
-            log(DEBUG, "Allocated CPU to " + root.name + " : " + str(root.cpu_share))
-            log(DEBUG, "Total CPU allocated : " + str(c_cpu))
-        allocate_cpu(root.right)
-
-def allocate_lte(root):
-    global c_lte
-    global lte_break
-    global t_lte
-    if root:
-        # First recur on left child
-        allocate_lte(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes and root.dem_lte > 0:
-            lte_to_allocate = float(root.dem_lte)*lte_alloc_delta
-            log(DEBUG, "Trying to Allocate " + str(lte_to_allocate) + " to " + root.name)
-            if lte_to_allocate <= t_lte - c_lte:
-                root.lte_share = float(root.lte_share) + lte_to_allocate
-                c_lte += lte_to_allocate
-            else :
-                lte_break = True
-                log(DEBUG, "LTE allocation break due to insufficient resources")
-
-            log(DEBUG, "Allocated LTE to " + root.name + " : " + str(root.lte_share))
-            log(DEBUG, "Total LTE allocated : " + str(c_lte))
-        allocate_lte(root.right)
 
 
 # Log helper function
@@ -293,8 +186,21 @@ def log(level, message):
 #         config.write(configFile)
 
 
-parent_dict = {}
-parent_list = []
+cpu_dem_dict = {}
+cpu_share_dict = {}
+lte_dem_dict = {}
+lte_share_dict = {}
+mem_dem_dict = {}
+mem_share_dict = {}
+
+
+# Logger configuration
+def init_logger(filename):
+    config.read(filename)
+    logLevel = config.get("LOGGING", "level")
+    logFile = config.get("LOGGING", "logFile")
+    logging.basicConfig(filename=logFile, filemode='a+', format='%(asctime)s | %(levelname)s : %(message)s', level=logLevel)
+    log(INFO, "**********************************************")
 
 
 #Radu code
@@ -302,13 +208,17 @@ parent_list = []
 def parse_config_vector(s):
     # print("parsing: " + s)
     return re.split(r',', s[1:-1])
-    
+
+   
 
 def init_from_config(iniFile):
     total_children = 0
-    config = configparser.ConfigParser()
     global parents
     global childs
+    global resource_types
+    global demand_list
+    global initial_qty_list
+    global delta_list
     try:
         config.read(iniFile)
         parents = config.get("NODES", "parents")
@@ -341,7 +251,7 @@ def init_from_config(iniFile):
 
         ###
         demand_list = []
-        all_demand_list =  (config.get("RESOURCES", "demand")).split('/')
+        all_demand_list =  (config.get("RESOURCES", "demand")).split('&')
         if(total_children != len(all_demand_list)):
            print("Number of nodes and list of demands do not match:", total_children, ',', len(all_demand_list))
         else:
@@ -350,12 +260,6 @@ def init_from_config(iniFile):
         print(demand_list)
         
 
-        ###
-        # global parents
-        # parents = config.get("NODES", "parents") 
-        # global childs
-        # childs = config.get("NODES", "childs")
-        # print ("Parents: " + parents + " and Childs: " + str(type(childs)))
            
     except Exception as e:
         print("Error (" + type(e).__name__ + ") with config file: " + str(e))
@@ -364,16 +268,26 @@ def init_from_config(iniFile):
 
 parents = 0
 childs = []
+deltas = {}
+resource_types = []
+demand_list = []
+initial_qty_list = []
+delta_list = []
 
 #Main Function
-
-   
+config = configparser.ConfigParser()
 if (len(sys.argv) != 2):
      print("Usage: python3 hdrf.py <config-file>")
      sys.exit()
 else:
+    init_logger("hdrf.conf")
     init_from_config(sys.argv[1])
     build_tree(parents,childs)
+    for resource in resource_types:
+        assign_resource_share(root, resource.strip())
+        calculate_deltas(delta_list, resource.strip())
+    
+    print(deltas)
 
 sys.exit()
 
