@@ -12,25 +12,6 @@ ERR = logging.ERROR
 CRIT = logging.CRITICAL
 
 
-# share_dem = {}
-# resource_left = {}
-
-# cur_node = None
-# cpu_delta = 50
-# lte_delta = 5
-
-
-# """ Make changes here to change the results """
-# n11_cpu_dem = 200
-# n21_cpu_dem = 250
-# n22_cpu_dem = 250
-
-# n11_lte_dem = 0
-# n21_lte_dem = 25
-# n22_lte_dem = 25
-
-# leaf_nodes = ["N11", "N21", "N22"]
-
 # A class that represents an individual node in a Tree
 # AnyTree
 
@@ -99,7 +80,6 @@ def preTravTree(root):
 
 def assign_resource_share(root, resource):
     global parents
-    global demand_list
     child_count = 0
     for i in range (int(parents)):
         for child in range (int(childs[i])):
@@ -125,9 +105,6 @@ def assign_resource_share(root, resource):
         print(lte_dem_dict)
 
 def calculate_deltas(delta_list, resource):
-    global cpu_delta
-    global lte_delta
-    global mem_delta
     if resource == "cpu":
         cpu_alloc_delta = int(delta_list[0])/float(min(cpu_dem_dict.values()))
         deltas.update({"cpu" : cpu_alloc_delta})
@@ -141,39 +118,130 @@ def calculate_deltas(delta_list, resource):
         deltas.update({"bw" : lte_alloc_delta})
         log(INFO,"BW Allocation Delta: " + str(lte_alloc_delta))
 
+def get_total_demand(resource):
+    global total_cpu_demands
+    global total_mem_demands
+    global total_lte_demands
+    if resource == "cpu":
+        total_cpu_demands = sum(cpu_dem_dict.values())
+        log(INFO,"Total CPU demands: " + str(total_cpu_demands))
+    elif resource == "mem":
+        total_mem_demands = sum(mem_dem_dict.values())
+        log(INFO,"Total MEM demands: " + str(total_mem_demands))
+    elif resource == "bw":
+        total_lte_demands = sum(lte_dem_dict.values())
+        log(INFO,"Total BW demands: " + str(total_lte_demands))
 
 
+def get_demand_vector(root, resource):
+    global parents
+    global childs
+    child_count = 0
+    for i in range (int(parents)):
+        for child in range (int(childs[i])):
+            # current_list = demand_list[child_count]
+            if resource == "cpu":
+                cpu_dem = cpu_dem_dict.get(root.children[i].children[child].name)
+                if cpu_dem != 0 and cpu_dem is not None:
+                    root.children[i].children[child].cpu_dem_vect = cpu_dem/float(total_cpu_demands)*100
+                    print(root.children[i].children[child].name + " cpu dem vector = " + str(root.children[i].children[child].cpu_dem_vect))
+            elif resource == "mem":
+                mem_dem = mem_dem_dict.get(root.children[i].children[child].name)
+                if mem_dem != 0 and mem_dem is not None:
+                    root.children[i].children[child].mem_dem_vect = mem_dem/float(total_mem_demands)*100
+                    print(root.children[i].children[child].name + " mem dem vector = " + str(root.children[i].children[child].mem_dem_vect))
+            elif resource == "bw":
+                lte_dem = lte_dem_dict.get(root.children[i].children[child].name)
+                if lte_dem != 0 and lte_dem is not None:
+                    root.children[i].children[child].lte_dem_vect = lte_dem/float(total_lte_demands)*100
+                    print(root.children[i].children[child].name + " bw dem vector = " + str(root.children[i].children[child].lte_dem_vect))
+            child_count += 1
+
+def update_parent_vectors(root, resource):
+    global parents
+    global childs
+    if root:
+        for parent in root.children:
+            for child in parent.children:
+                if isLeafNode(child):
+                    if resource == "cpu":
+                        parent.cpu_dem_vect += float(child.cpu_dem_vect)
+                    elif resource == "mem":
+                        parent.mem_dem_vect += float(child.mem_dem_vect)
+                    elif resource == "bw":
+                        parent.lte_dem_vect += float(child.lte_dem_vect)
+                # update_parent_vectors(child, resource)
+
+def update_parent_vector_dict(root, resource):
+    global parents
+    global childs
+    if root:
+        for i in range (int(parents)):
+            for child in root.children:
+                if resource == "cpu":
+                    cpu_dem_vect_dict.update({root.name : root.cpu_dem_vect})
+                elif resource == "mem":
+                    mem_dem_vect_dict.update({root.name : root.mem_dem_vect})
+                elif resource == "bw":
+                    lte_dem_vect_dict.update({root.name : root.lte_dem_vect})
+                # update_parent_vector_dict(child, resource)
+    
 
 
-def update_parent_demand(root):
-    if root and not isLeafNode(root):
+def update_dom_resource_list(root, resource):
+    global total_cpu_demands
+    global total_mem_demands
+    global total_lte_demands
+
+    print("Resource qty list: " + str(resource_qty_list) + " CPU dem: " + str(total_cpu_demands) + " MEM dem: " + str(total_mem_demands) + " BW dem: " + str(total_lte_demands))
+
+    if resource == "cpu":
+        dom_resource_dict.update({resource : total_cpu_demands/float(resource_qty_list[0])})
+    elif resource == "mem":
+        dom_resource_dict.update({resource : total_mem_demands/float(resource_qty_list[1])})
+    elif resource == "bw":
+        dom_resource_dict.update({resource : total_lte_demands/float(resource_qty_list[2])})    
+
+
+def update_res_alloc_order():
+    res_alloc_order = sorted(dom_resource_dict, key=dom_resource_dict.get, reverse=True)
+    print("Resource allocation order: " + str(res_alloc_order))
+
+
+def allocate_resource(root, resource):
+    resource_remining = 0 
+    resource_allocated = 0
+    global parents
+    global childs
+    if root:
+        for parent in root.children:
+            for child in parent.children:
+                if isLeafNode(child):
+                    if resource == "cpu":
+                        parent.cpu_dem_vect += float(child.cpu_dem_vect)
+                    elif resource == "mem":
+                        parent.mem_dem_vect += float(child.mem_dem_vect)
+                    elif resource == "bw":
+                        parent.lte_dem_vect += float(child.lte_dem_vect)
+                # allocate_resource(child, resource)
+
+    if root:
         # First recur on left child
-        update_parent_demand(root.left)    
-        update_parent_demand(root.right)
-        log(DEBUG, "Updating :" + root.name)
-        if root.left is not None and root.right is not None:
-            root.dem_cpu = root.left.dem_cpu + root.right.dem_cpu
-            root.dem_lte = root.left.dem_lte + root.right.dem_lte
-            log(DEBUG,root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))
-            # parent_dict.update({root.name: [root.left.name, root.right.name]})
-        elif root.left is not None:
-            root.dem_cpu = root.left.dem_cpu
-            root.dem_lte = root.left.dem_lte
-            log(DEBUG,root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))
-            # parent_dict.update({root.name: [root.left.name]})   
-        else:
-            root.dem_cpu = root.right.dem_cpu
-            root.dem_lte = root.right.dem_lte
-            log(DEBUG,root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))
-            # parent_dict.update({root.name: [root.right.name]})
+        allocate_resource(root.left)
+        # then print the data of node
+        if root.name in leaf_nodes and root.dem_cpu > 0:
+            cpu_to_allocate = float(root.dem_cpu)*cpu_alloc_delta
+            log(DEBUG, "Trying to Allocate " + str(cpu_to_allocate) + " to " + root.name)
+            if cpu_to_allocate <= t_cpu - c_cpu:
+                root.cpu_share = float(root.cpu_share) + cpu_to_allocate
+                c_cpu += cpu_to_allocate
+            else :
+                cpu_break = True
+                log(DEBUG, "CPU allocation break due to insufficient resources")
 
-def print_parent_demands(root):
-    if root and not isLeafNode(root):
-        # First recur on left child
-        print_parent_demands(root.left) 
-        log(INFO, root.name + " : " + str(root.dem_cpu) + " : " + str(root.dem_lte))   
-        print_parent_demands(root.right)
-
+            log(DEBUG, "Allocated CPU to " + root.name + " : " + str(root.cpu_share))
+            log(DEBUG, "Total CPU allocated : " + str(c_cpu))
+        allocate_resource(root.right)
 
 
 # Log helper function
@@ -185,13 +253,34 @@ def log(level, message):
 #     with open('hdrf_config.conf', 'w') as configFile:
 #         config.write(configFile)
 
-
+# All dicts used in the program
 cpu_dem_dict = {}
 cpu_share_dict = {}
-lte_dem_dict = {}
-lte_share_dict = {}
 mem_dem_dict = {}
 mem_share_dict = {}
+lte_dem_dict = {}
+lte_share_dict = {}
+
+cpu_dem_vect_dict = {}
+mem_dem_vect_dict = {}
+lte_dem_vect_dict = {}
+
+deltas = {}
+dom_resource_dict = {}
+
+# All lists used in the program
+res_alloc_order = []
+childs = []
+resource_types = []
+demand_list = []
+resource_qty_list = []
+delta_list = []
+
+# All global variables used in the program
+parents = 0
+total_cpu_demands = 0
+total_mem_demands = 0
+total_lte_demands = 0
 
 
 # Logger configuration
@@ -217,7 +306,7 @@ def init_from_config(iniFile):
     global childs
     global resource_types
     global demand_list
-    global initial_qty_list
+    global resource_qty_list
     global delta_list
     try:
         config.read(iniFile)
@@ -236,10 +325,10 @@ def init_from_config(iniFile):
         print("Resources: \t" + ' '.join(resource_types))
 
         ###
-        initial_qty_list = parse_config_vector(config.get("RESOURCES", "initial-qty"))
-        print("Initial qty: \t" + ' '.join(initial_qty_list))
-        if(len(resource_types) != len(initial_qty_list)):
-           print("Number of resurces and initial qty resources do not match")
+        resource_qty_list = parse_config_vector(config.get("RESOURCES", "resource-qty"))
+        print("Resource qty: \t" + ' '.join(resource_qty_list))
+        if(len(resource_types) != len(resource_qty_list)):
+           print("Number of resurces and qty of resources do not match")
 
         ###
         delta_list =  parse_config_vector(config.get("RESOURCES", "delta"))
@@ -254,6 +343,7 @@ def init_from_config(iniFile):
         all_demand_list =  (config.get("RESOURCES", "demand")).split('&')
         if(total_children != len(all_demand_list)):
            print("Number of nodes and list of demands do not match:", total_children, ',', len(all_demand_list))
+           sys.exit()
         else:
             for mylist in all_demand_list:
                 demand_list.append(list(mylist.split(",")))
@@ -266,13 +356,7 @@ def init_from_config(iniFile):
         sys.exit()
 
 
-parents = 0
-childs = []
-deltas = {}
-resource_types = []
-demand_list = []
-initial_qty_list = []
-delta_list = []
+
 
 #Main Function
 config = configparser.ConfigParser()
@@ -286,7 +370,16 @@ else:
     for resource in resource_types:
         assign_resource_share(root, resource.strip())
         calculate_deltas(delta_list, resource.strip())
+        get_total_demand(resource.strip())
+        get_demand_vector(root, resource.strip())
+        update_parent_vectors(root, resource.strip())
+        update_parent_vector_dict(root, resource.strip())
+        update_dom_resource_list(root, resource.strip())
+    update_res_alloc_order()
+    for resource in res_alloc_order:
+        allocate_resource(root, resource.strip())
     
+    print("Dominant resource dict: ", str(dom_resource_dict))   
     print(deltas)
 
 sys.exit()
