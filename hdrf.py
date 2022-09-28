@@ -3,7 +3,6 @@ import logging
 import sys
 from collections import deque
 import re
-import json
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -54,7 +53,7 @@ def preTravTree(root):
  
     Stack = deque([])
     # 'Preorder'-> contains all the visited nodes.
-    Preorder =[] 
+    Preorder =[]
     Preorder.append(root.name)
     Stack.append(root)
     while len(Stack)>0:
@@ -81,12 +80,38 @@ def preTravTree(root):
             Stack.pop()
     print(Preorder)
 
+
+def assign_resource_share2(root,resource_types):
+    global parents
+    global childs
+    global demand_list
+    global res_dem_dict
+    res_dict = {}
+    for res in resource_types:
+        child_count = 0
+        for i in range (int(parents)):
+            for child in range (int(childs[i])):
+                current_list = demand_list[child_count]
+                for item in current_list:
+                    if int(item) !=0:
+                        res_dict.update({root.children[i].children[child].name : int(item)})
+                child_count += 1
+        res_dem_dict.update({res.strip():res_dict})
+    print("Resource Dem dict(2) : ", res_dem_dict)
+
+
 def assign_resource_share(root, resource):
     global parents
+    global childs
+    global res_dem_dict
     child_count = 0
+    res_dict = {}
     for i in range (int(parents)):
         for child in range (int(childs[i])):
             current_list = demand_list[child_count]
+            for item in current_list:
+                if int(item) !=0:
+                    res_dict.update({root.children[i].children[child].name : int(item)})
             if resource == "cpu":
                 cpu = int(current_list[0])    
                 if cpu != 0:
@@ -100,6 +125,7 @@ def assign_resource_share(root, resource):
                 if lte != 0:
                     lte_dem_dict.update({root.children[i].children[child].name : lte})
             child_count += 1
+    res_dem_dict.update({resource:res_dict})
     if resource == "cpu":
         print(cpu_dem_dict)
     elif resource == "mem":
@@ -107,7 +133,28 @@ def assign_resource_share(root, resource):
     elif resource == "bw":
         print(lte_dem_dict)
 
-def calculate_deltas(delta_list, resource):
+
+def update_delta_dict(delta_list, resource_types):
+    global delta_list_dict
+    if len(delta_list) != len(resource_types):
+        log(ERR,"Delta List and Resource Types are not of same length")
+        sys.exit(1)
+    for i in range(len(resource_types)):
+        delta_list_dict.update({resource_types[i].strip():delta_list[i]})
+    print("Delta List Dict (2):", delta_list_dict)
+
+
+def calculate_deltas2(resource_types):
+    global res_dem_dict
+    for res in resource_types:
+        demand_dict = res_dem_dict.get(res.strip()) 
+        res_alloc_delta = float(delta_list_dict.get(res.strip()))/float(min(demand_dict.values()))
+        deltas.update({res.strip() : res_alloc_delta})
+        log(INFO,res.strip().upper() + " Allocation Delta: " + str(res_alloc_delta))
+    print("Resource allocation deltas(2) :", deltas)
+
+
+def calculate_deltas(delta_list, resource):   
     if resource == "cpu":
         cpu_alloc_delta = int(delta_list[0])/float(min(cpu_dem_dict.values()))
         deltas.update({"cpu" : cpu_alloc_delta})
@@ -263,18 +310,24 @@ def log(level, message):
 #         config.write(configFile)
 
 # All dicts used in the program
+
+res_dem_dict = {}
 cpu_dem_dict = {}
-cpu_share_dict = {}
 mem_dem_dict = {}
-mem_share_dict = {}
 lte_dem_dict = {}
+
+res_share_dict = {}
+cpu_share_dict = {}
+mem_share_dict = {}
 lte_share_dict = {}
 
+res_dem_vect_dict = {}
 cpu_dem_vect_dict = {}
 mem_dem_vect_dict = {}
 lte_dem_vect_dict = {}
 
 deltas = {}
+delta_list_dict = {}
 dom_resource_dict = {}
 resource_qty_dict = {}
 
@@ -339,12 +392,14 @@ def init_from_config(iniFile):
         print("Resource qty: \t" + ' '.join(resource_qty_list))
         if(len(resource_types) != len(resource_qty_list)):
            print("Number of resurces and qty of resources do not match")
+           sys.exit()
 
         ###
         delta_list =  parse_config_vector(config.get("RESOURCES", "delta"))
         print("Delta: \t\t" + ' '.join(delta_list))
         if(len(resource_types) != len(delta_list)):
            print("Number of resurces and list of deltas do not match")
+           sys.exit()
         else:
             print(delta_list)
 
@@ -377,6 +432,9 @@ else:
     init_logger("hdrf.conf")
     init_from_config(sys.argv[1])
     build_tree(parents,childs)
+    update_delta_dict(delta_list, resource_types)
+    assign_resource_share2(root, resource_types)
+    calculate_deltas2(resource_types)
     for resource in resource_types:
         assign_resource_share(root, resource.strip())
         calculate_deltas(delta_list, resource.strip())
@@ -397,7 +455,7 @@ else:
         log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
         total_resource = resource_qty_dict.get(str(resource.strip()))
         log(INFO, "Total " + resource + " available: " + str(total_resource))
-        allocate_resource(root, resource.strip(), total_resource)
+        # allocate_resource(root, resource.strip(), total_resource)
     
     print("Dominant resource dict: ", str(dom_resource_dict))   
     print(deltas)
