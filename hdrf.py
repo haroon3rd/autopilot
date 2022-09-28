@@ -24,6 +24,9 @@ class anyTree:
         self.cpu_dem_vect = 0
         self.lte_dem_vect = 0
         self.mem_dem_vect = 0
+        self.cpu_share = 0
+        self.lte_share = 0
+        self.mem_share = 0
         self.dom_share = 0
         
     def add_child(self, child):
@@ -204,44 +207,50 @@ def update_dom_resource_list(root, resource):
 
 
 def update_res_alloc_order():
+    global res_alloc_order
     res_alloc_order = sorted(dom_resource_dict, key=dom_resource_dict.get, reverse=True)
     print("Resource allocation order: " + str(res_alloc_order))
 
+def update_resource_qty_dict():
+    global resource_qty_dict
+    global resource_qty_list
+    global resource_types
+    for i in range (len(resource_types)):
+        resource_qty_dict.update({resource_types[i].strip() : resource_qty_list[i]})
+    # print("Resource qty list: " + str(resource_qty_list))
 
-def allocate_resource(root, resource):
+
+def allocate_resource(root, resource, total_resource):
+    log(DEBUG, "Allocating resource: " + resource)
     resource_remining = 0 
     resource_allocated = 0
     global parents
     global childs
-    if root:
+    if root and total_resource is not None:
         for parent in root.children:
             for child in parent.children:
                 if isLeafNode(child):
-                    if resource == "cpu":
-                        parent.cpu_dem_vect += float(child.cpu_dem_vect)
-                    elif resource == "mem":
-                        parent.mem_dem_vect += float(child.mem_dem_vect)
-                    elif resource == "bw":
-                        parent.lte_dem_vect += float(child.lte_dem_vect)
+                    if resource == "cpu" and cpu_dem_dict.get(child.name) > 0:
+                        resource_to_allocate = float(cpu_dem_dict.get(child.name))*float(deltas.get("cpu"))
+                        log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + "CPU to " + child.name)
+                        if resource_to_allocate <= float(total_resource) - float(resource_allocated):
+                            child.cpu_share = float(child.cpu_share) + resource_to_allocate
+                            resource_allocated += resource_to_allocate
+                    elif resource == "mem" and mem_dem_dict.get(child.name) > 0:
+                        resource_to_allocate = float(mem_dem_dict.get(child.name))*float(deltas.get("mem"))
+                        log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + "MEM to " + child.name)
+                        if resource_to_allocate <= float(total_resource) - float(resource_allocated):
+                            child.lte_share = float(child.mem_share) + resource_to_allocate
+                            resource_allocated += resource_to_allocate
+                    elif resource == "BW" and lte_dem_dict.get(child.name) > 0:
+                        resource_to_allocate = float(lte_dem_dict.get(child.name))*float(deltas.get("bw"))
+                        log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + "BW to " + child.name)
+                        if resource_to_allocate <= float(total_resource) - float(resource_allocated):
+                            child.lte_share = float(child.lte_share) + resource_to_allocate
+                            resource_allocated += resource_to_allocate
+                    # log(DEBUG, "Allocated CPU to " + root.name + " : " + str(root.cpu_share))
+                    # log(DEBUG, "Total CPU allocated : " + str(c_cpu))
                 # allocate_resource(child, resource)
-
-    if root:
-        # First recur on left child
-        allocate_resource(root.left)
-        # then print the data of node
-        if root.name in leaf_nodes and root.dem_cpu > 0:
-            cpu_to_allocate = float(root.dem_cpu)*cpu_alloc_delta
-            log(DEBUG, "Trying to Allocate " + str(cpu_to_allocate) + " to " + root.name)
-            if cpu_to_allocate <= t_cpu - c_cpu:
-                root.cpu_share = float(root.cpu_share) + cpu_to_allocate
-                c_cpu += cpu_to_allocate
-            else :
-                cpu_break = True
-                log(DEBUG, "CPU allocation break due to insufficient resources")
-
-            log(DEBUG, "Allocated CPU to " + root.name + " : " + str(root.cpu_share))
-            log(DEBUG, "Total CPU allocated : " + str(c_cpu))
-        allocate_resource(root.right)
 
 
 # Log helper function
@@ -267,6 +276,7 @@ lte_dem_vect_dict = {}
 
 deltas = {}
 dom_resource_dict = {}
+resource_qty_dict = {}
 
 # All lists used in the program
 res_alloc_order = []
@@ -376,8 +386,18 @@ else:
         update_parent_vector_dict(root, resource.strip())
         update_dom_resource_list(root, resource.strip())
     update_res_alloc_order()
+    update_resource_qty_dict()
+    
+    # log(INFO, "Resource quantity list: " + str(resource_qty_list))
+    log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
+    log(INFO, "Resource allocation order: " + str(res_alloc_order))
+
     for resource in res_alloc_order:
-        allocate_resource(root, resource.strip())
+        log(INFO, "Allocating " + resource + " to nodes")
+        log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
+        total_resource = resource_qty_dict.get(str(resource.strip()))
+        log(INFO, "Total " + resource + " available: " + str(total_resource))
+        allocate_resource(root, resource.strip(), total_resource)
     
     print("Dominant resource dict: ", str(dom_resource_dict))   
     print(deltas)
