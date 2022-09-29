@@ -183,18 +183,18 @@ def get_demand_vector2(root, resource_types):
 def update_dom_resource_list2(resource_types):
     global res_dem_dict
     global resource_qty_dict
-    global dom_resource_dict2
+    global total_demands_dict
 
     for i in range(len(resource_types)):
         tot_res_dem = float(total_demands_dict.get(resource_types[i].strip()))
-        dom_resource_dict2.update({resource_types[i].strip() : tot_res_dem/float(resource_qty_list[i])})
-    log(INFO,"Dominant Resource Dict : " + str(dom_resource_dict2))
+        total_demands_dict.update({resource_types[i].strip() : tot_res_dem/float(resource_qty_list[i])})
+    log(INFO,"Dominant Resource Dict : " + str(total_demands_dict))
   
 
 
 def update_res_alloc_order():
     global res_alloc_order
-    res_alloc_order = sorted(dom_resource_dict2, key=dom_resource_dict2.get, reverse=True)
+    res_alloc_order = sorted(total_demands_dict, key=total_demands_dict.get, reverse=True)
     print("Resource allocation order: " + str(res_alloc_order))
 
 def update_resource_qty_dict():
@@ -230,8 +230,6 @@ def allocate_resource2(root, resource, total_resource):
                             if resource_to_allocate <= float(total_resource) - float(resource_allocated):
                                 if allocated_dict.get(child.name) is not None: 
                                     allocated_dict.update({child.name : float(allocated_dict.get(child.name)) + float(resource_to_allocate)})
-                                # new_allocation = float(allocated_dict.get(child.name)) + resource_to_allocate
-                                # allocated_dict.update({child.name: new_allocation})
                                     resource_allocated += resource_to_allocate
                                 else:
                                     allocated_dict.update({child.name : float(resource_to_allocate)})
@@ -245,9 +243,6 @@ def allocate_resource2(root, resource, total_resource):
         log(DEBUG,"Allocated dict: " + str(allocated_dict))
         allocated_res_dict.update({resource : allocated_dict})
     print("....done")
-                    # log(DEBUG, "Allocated CPU to " + root.name + " : " + str(root.cpu_share))
-                    # log(DEBUG, "Total CPU allocated : " + str(c_cpu))
-                # allocate_resource(child, resource)
 
 
 # Log helper function
@@ -269,9 +264,9 @@ res_dem_vect_dict = {}
 deltas = {}
 delta_list_dict = {}
 dom_resource_dict = {}
-dom_resource_dict2 = {}
 resource_qty_dict = {}
 allocated_res_dict = {}
+total_demands_dict = {}
 
 # All lists used in the program
 res_alloc_order = []
@@ -283,10 +278,7 @@ delta_list = []
 
 # All global variables used in the program
 parents = 0
-total_demands_dict = {}
-total_cpu_demands = 0
-total_mem_demands = 0
-total_lte_demands = 0
+
 
 
 # Logger configuration
@@ -356,9 +348,6 @@ def init_from_config(iniFile):
             for mylist in all_demand_list:
                 demand_list.append(list(mylist.split(",")))
         # print(demand_list)
-        
-
-           
     except Exception as e:
         print("Error (" + type(e).__name__ + ") with config file: " + str(e))
         sys.exit()
@@ -397,6 +386,5 @@ else:
         # allocate_resource(root, resource.strip(), total_resource)
     # print("Deltas : ",deltas)
     print("Final allocation :\n",allocated_res_dict)
-
 sys.exit()
 
