@@ -224,7 +224,7 @@ def allocate_resource2(root, resource, total_resource):
                         log(DEBUG, "Temp dict for allocation : " + str(temp_dict))
                         if temp_dict.get(child.name) is not None and  float(temp_dict.get(child.name)) > 0:
                             ress = res_dem_dict.get(resource)
-                            resource_to_allocate = float(ress.get(child.name))*float(deltas.get("cpu"))
+                            resource_to_allocate = float(ress.get(child.name))*float(deltas.get(resource))
                             log(DEBUG,"Resource to allocate: " + str(resource_to_allocate))
                             log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + " " + resource + " to " + child.name)
                             if resource_to_allocate <= float(total_resource) - float(resource_allocated):
