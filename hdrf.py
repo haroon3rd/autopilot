@@ -3,6 +3,10 @@ import logging
 import sys
 from collections import deque
 import re
+import time
+
+# Get Execution time
+start_time = time.time()
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -14,7 +18,6 @@ CRIT = logging.CRITICAL
 # A class that represents an individual node in a Tree
 # AnyTree
 
-
 class anyTree:
     def __init__(self, name):
         self.children = []
@@ -24,6 +27,9 @@ class anyTree:
     def add_child(self, child):
         self.children.append(child)
         child.parent = self
+    
+    def get_parent(self):
+        return self.parent
 
 def build_tree(parents, childs):
     global root
@@ -74,7 +80,7 @@ def preTravTree(root):
     print("Organizational Structure : ",Preorder)
 
 
-def assign_resource_share2(root,resource_types):
+def assign_resource_share(root,resource_types):
     global parents
     global childs
     global demand_list
@@ -108,7 +114,7 @@ def update_delta_dict(delta_list, resource_types):
     log(DEBUG,"Delta List Dict:" +str(delta_list_dict))
 
 
-def calculate_deltas2(resource_types):
+def calculate_deltas(resource_types):
     global res_dem_dict
     for res in resource_types:
         demand_dict = res_dem_dict.get(res.strip()) 
@@ -118,7 +124,7 @@ def calculate_deltas2(resource_types):
     log(INFO,"Resource allocation deltas :" + str(deltas))
 
 
-def get_total_demand2(resource_types):
+def get_total_demand(resource_types):
     global total_demands_dict
     for res in resource_types:
         total_demands = sum(res_dem_dict.get(res.strip()).values())
@@ -126,7 +132,7 @@ def get_total_demand2(resource_types):
     log(INFO, "Total Demands Dict : " + str(total_demands_dict))
 
 
-def get_demand_vector2(root, resource_types):
+def get_demand_vector(root, resource_types):
     global parents
     global childs
     global res_dem_vect_dict
@@ -146,41 +152,39 @@ def get_demand_vector2(root, resource_types):
     log(INFO,"Resource Demand Vector Dict : " + str(res_dem_vect_dict))
 
 
-# Will fix it later
-###############################################
-# def update_parent_vectors(root, resource):
-#     global parents
-#     global childs
-#     if root:
-#         for parent in root.children:
-#             for child in parent.children:
-#                 if isLeafNode(child):
-#                     if resource == "cpu":
-#                         parent.cpu_dem_vect += float(child.cpu_dem_vect)
-#                     elif resource == "mem":
-#                         parent.mem_dem_vect += float(child.mem_dem_vect)
-#                     elif resource == "bw":
-#                         parent.lte_dem_vect += float(child.lte_dem_vect)
-                # update_parent_vectors(child, resource)
+# Function to calculate the parent vectors by summing the child vectors in
+# the anyTree class
+def get_parent_vector(root, resource_types):
+    global res_dem_vect_dict
+    global res_par_vect_dict
+    for res in resource_types:
+        temp_par_vect_dict = {}
+        res_dem_vect = res_dem_vect_dict.get(res.strip())
+        # print("Res Dem Vect : ", res_dem_vect)
+        for par in root.children:
+            # print("Parent : ", par.name)
+            tot_dem_vect = 0
+            for child in par.children:
+                # print("Child : ", child.name)
+                if res_dem_vect.get(child.name) != 0 and res_dem_vect.get(child.name) is not None:
+                    # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
+                    tot_dem_vect += res_dem_vect.get(child.name)
+                    temp_par_vect_dict.update({par.name : tot_dem_vect})
+        res_par_vect_dict.update({res.strip() : temp_par_vect_dict})
+    log(INFO,"Resource Parent Vector Dict : " + str(res_par_vect_dict)) 
 
-# Will fix it later
-###############################################
-# def update_parent_vector_dict(root, resource):
-#     global parents
-#     global childs
-#     if root:
-#         for i in range (int(parents)):
-#             for child in root.children:
-#                 if resource == "cpu":
-#                     cpu_dem_vect_dict.update({root.name : root.cpu_dem_vect})
-#                 elif resource == "mem":
-#                     mem_dem_vect_dict.update({root.name : root.mem_dem_vect})
-#                 elif resource == "bw":
-#                     lte_dem_vect_dict.update({root.name : root.lte_dem_vect})
-                # update_parent_vector_dict(child, resource)
+# Under development
+def nodes_dem_vect_update(root, resource_types):
+    global nodes_dem_vect_dict
+    global allocated_res_dict
+    global resource_qty_dict
+    for res in resource_types:
+        # TODO: Update the nodes_dem_vect_dict with the data from allocated resources
+        print("Res : ", res)
+    log(INFO,"Node Demand Vector Dict : " + str(nodes_dem_vect_dict))
     
 
-def update_dom_resource_list2(resource_types):
+def update_dom_resource_list(resource_types):
     global res_dem_dict
     global resource_qty_dict
     global total_demands_dict
@@ -190,7 +194,6 @@ def update_dom_resource_list2(resource_types):
         total_demands_dict.update({resource_types[i].strip() : tot_res_dem/float(resource_qty_list[i])})
     log(INFO,"Dominant Resource Dict : " + str(total_demands_dict))
   
-
 
 def update_res_alloc_order():
     global res_alloc_order
@@ -202,13 +205,13 @@ def update_resource_qty_dict():
     global resource_qty_list
     global resource_types
     for i in range (len(resource_types)):
-        resource_qty_dict.update({resource_types[i].strip() : resource_qty_list[i]})
+        resource_qty_dict.update({resource_types[i].strip() : int(resource_qty_list[i])})
     # print("Resource qty list: " + str(resource_qty_list))
 
-def allocate_resource2(root, resource, total_resource):
+def allocate_resource(root, resource, total_resource):
     print("Allocating resource: " + resource,end="")
     log(INFO, "Allocating resource: " + resource)
-    resource_remining = 0 
+    
     resource_allocated = 0
     global allocated_res_dict
     global parents
@@ -234,10 +237,10 @@ def allocate_resource2(root, resource, total_resource):
                                 else:
                                     allocated_dict.update({child.name : float(resource_to_allocate)})
                                     resource_allocated += resource_to_allocate
-                                log(INFO, "Allocated " + resource + " to " + child.name + " = " + str(resource_allocated))
+                                log(DEBUG, "Allocated " + resource + " to " + child.name + " = " + str(resource_allocated))
                             else:
                                 resource_remining = float(total_resource) - float(resource_allocated)
-                                log(INFO, "Not enough : " + resource + " remaining for further alocation.")
+                                log(DEBUG, "Not enough : " + resource + " remaining for further alocation.")
                                 res_break = 1
                                 break                
         log(DEBUG,"Allocated dict: " + str(allocated_dict))
@@ -259,6 +262,8 @@ def log(level, message):
 res_dem_dict = {}
 res_share_dict = {}
 res_dem_vect_dict = {}
+res_par_vect_dict = {}
+nodes_dem_vect_dict = {}
 
 
 deltas = {}
@@ -353,38 +358,59 @@ def init_from_config(iniFile):
         sys.exit()
 
 
-
-
-#Main Function
+# Main Function
 config = configparser.ConfigParser()
 if (len(sys.argv) != 2):
      print("Usage: python3 hdrf.py <config-file>")
      sys.exit()
-else:
-    init_logger("hdrf.conf")
-    init_from_config(sys.argv[1])
-    build_tree(parents,childs)
-    update_delta_dict(delta_list, resource_types)
-    assign_resource_share2(root, resource_types)
-    calculate_deltas2(resource_types)
-    get_total_demand2(resource_types)
-    get_demand_vector2(root, resource_types)
-    update_dom_resource_list2(resource_types)
-    update_res_alloc_order()
-    update_resource_qty_dict()
-    
-    # log(INFO, "Resource quantity list: " + str(resource_qty_list))
-    log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
-    log(INFO, "Resource allocation order: " + str(res_alloc_order))
 
-    for resource in res_alloc_order:
-        # log(INFO, "Allocating " + resource + " to nodes")
-        # log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
-        total_resource = resource_qty_dict.get(str(resource.strip()))
-        log(INFO, "Total " + resource + " available: " + str(total_resource))
-        allocate_resource2(root, resource.strip(), total_resource)
-        # allocate_resource(root, resource.strip(), total_resource)
-    # print("Deltas : ",deltas)
-    print("Final allocation :\n",allocated_res_dict)
+# Logger initialization
+init_logger(sys.argv[1])
+
+# Get the config file name from the command line and parse it
+init_from_config(sys.argv[1])
+
+# Create the organization of the nodes
+build_tree(parents,childs)
+
+# Update resource delta in a new dict
+update_delta_dict(delta_list, resource_types)
+
+# Update resource demand in a new dict
+assign_resource_share(root, resource_types)
+
+# Calculate individual resource deltas and save in a new dict
+calculate_deltas(resource_types)
+
+# Calculate the total demand for each resource
+get_total_demand(resource_types)
+
+# Calculate the demand vectors for each resource
+get_demand_vector(root, resource_types)
+
+# Update the parent's demand vectors for each resource
+get_parent_vector(root, resource_types)
+
+# Calculate the dominant resource for each node
+update_dom_resource_list(resource_types)
+
+# Calculate the resource allocation order from dominant resources
+update_res_alloc_order()
+
+# Update resources quantity dict for use in allocation
+update_resource_qty_dict()
+
+# log(INFO, "Resource quantity list: " + str(resource_qty_list))
+log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
+log(INFO, "Resource allocation order: " + str(res_alloc_order))
+
+# Allocate resources one by one until exhaustion
+for resource in res_alloc_order:
+    total_resource = resource_qty_dict.get(str(resource.strip()))
+    log(INFO, "Total " + resource + " available: " + str(total_resource))
+    allocate_resource(root, resource.strip(), total_resource)
+log(INFO, "Final allocation : " + str(allocated_res_dict))
+print("Final allocation :\n",allocated_res_dict)
+log(INFO, "Total run time is %s seconds!" % (time.time() - start_time))
 sys.exit()
 
