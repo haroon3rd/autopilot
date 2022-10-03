@@ -175,13 +175,61 @@ def get_parent_vector(root, resource_types):
 
 # Under development
 def nodes_dem_vect_update(root, resource_types):
-    global nodes_dem_vect_dict
+    global nodes_dom_vect_dict
+    global par_dom_vect_dict
     global allocated_res_dict
     global resource_qty_dict
     for res in resource_types:
-        # TODO: Update the nodes_dem_vect_dict with the data from allocated resources
-        print("Res : ", res)
-    log(INFO,"Node Demand Vector Dict : " + str(nodes_dem_vect_dict))
+        # print("Running for Resource : ", res)
+        tot_res = resource_qty_dict.get(res.strip())
+        # print("Total Resource : ", tot_res)
+        temp_one_dem_vect_dict = {}
+        temp_par_dom_vect_dict = {}
+        one_allocated_dict = allocated_res_dict.get(res.strip())
+        # print("One Allocated Dict : ", one_allocated_dict)
+        if tot_res != 0 and tot_res is not None:
+            for par in root.children:
+                par_share_vect = 0.0
+                for child in par.children:
+                    # print("Child : ", child.name)
+                    if one_allocated_dict.get(child.name) != 0 and one_allocated_dict.get(child.name) is not None:
+                        # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
+                        dom_share_vect = float(one_allocated_dict.get(child.name))/float(tot_res)*100
+                        par_share_vect += dom_share_vect
+                        # print("Dom Share Vect : ", dom_share_vect)
+                        temp_one_dem_vect_dict.update({child.name : dom_share_vect})
+                        temp_par_dom_vect_dict.update({par.name : par_share_vect})
+
+        nodes_dom_vect_dict.update({res.strip() : temp_one_dem_vect_dict})
+        par_dom_vect_dict.update({res.strip() : temp_par_dom_vect_dict})
+    log(INFO,"Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
+    log(INFO,"Parents' Dominant Shares After allocation : " + str(par_dom_vect_dict))
+    print("Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
+    print("Parents' Dominant Shares After allocation : " + str(par_dom_vect_dict))
+
+def calculate_revised_dom_share(root, resource_types):
+    global par_dom_vect_dict
+    global resource_qty_dict
+    global revised_par_dom_share_dict
+    for par in root.children:
+        max_res_share = 0.0
+        max_res_type = ""
+        for res in resource_types:
+            res_dict = par_dom_vect_dict.get(res.strip())
+            # print("Res Dict : ", res_dict)
+            if res_dict != 0 and res_dict is not None:
+                par_share = res_dict.get(par.name)
+                # print("Parent : ", par.name, " Resource : ", res, " Share : ", par_share)
+                if par_share != 0 and par_share is not None:
+                    if  par_share > max_res_share:
+                        max_res_share = par_share
+                        max_res_type = res.strip()
+        # print("Max Res Share : ", max_res_share)
+        revised_par_dom_share_dict.update({par.name : max_res_share})
+    log(INFO, "Parents' updated Dominant Resource Share : " + str(revised_par_dom_share_dict))
+    print("Parents' updated Dominant Resource Share : \n" + str(revised_par_dom_share_dict))
+            
+    
     
 
 def update_dom_resource_list(resource_types):
@@ -263,7 +311,9 @@ res_dem_dict = {}
 res_share_dict = {}
 res_dem_vect_dict = {}
 res_par_vect_dict = {}
-nodes_dem_vect_dict = {}
+nodes_dom_vect_dict = {}
+par_dom_vect_dict = {}
+revised_par_dom_share_dict = {}
 
 
 deltas = {}
@@ -411,6 +461,13 @@ for resource in res_alloc_order:
     allocate_resource(root, resource.strip(), total_resource)
 log(INFO, "Final allocation : " + str(allocated_res_dict))
 print("Final allocation :\n",allocated_res_dict)
+
+# Update individual child nodes' dominant share vector
+nodes_dem_vect_update(root, resource_types)
+
+# Calculated revised parent's dominant share vector after primary allocation
+calculate_revised_dom_share(root, resource_types)
+
 log(INFO, "Total run time is %s seconds!" % (time.time() - start_time))
 sys.exit()
 
