@@ -107,33 +107,35 @@ def assign_resource_share(root,resource_types):
     log(INFO,"Node wise Resource Dem dict : " + str(nodewise_res_dem_dict))
 
 
-def update_delta_dict(delta_list, resource_types):
-    global delta_list_dict
-    if len(delta_list) != len(resource_types):
-        log(ERR,"Delta List and Resource Types are not of same length")
-        sys.exit(1)
-    for i in range(len(resource_types)):
-        delta_list_dict.update({resource_types[i].strip():delta_list[i]})
-    log(DEBUG,"Delta List Dict:" +str(delta_list_dict))
-
+# def update_delta_dict(delta_list, resource_types):
+#     global delta_list_dict
+#     if len(delta_list) != len(resource_types):
+#         log(ERR,"Delta List and Resource Types are not of same length")
+#         sys.exit(1)
+#     for i in range(len(resource_types)):
+#         delta_list_dict.update({resource_types[i].strip():delta_list[i]})
+#     log(DEBUG,"Delta List Dict:" +str(delta_list_dict))
 
 
 # Need to recalculated Delta for each node
-def calculate_deltas(resource_types):
-    global res_dem_dict
-    for res in resource_types:
-        demand_dict = res_dem_dict.get(res.strip()) 
-        res_alloc_delta = float(delta_list_dict.get(res.strip()))/float(min(demand_dict.values()))
-        deltas.update({res.strip() : res_alloc_delta})
-        log(INFO,res.strip().upper() + " Allocation Delta: " + str(res_alloc_delta))
-    log(INFO,"Resource allocation deltas :" + str(deltas))
+def calculate_node_deltas(nodewise_res_dem_dict):
+    global node_deltas_dict
+    for node in nodewise_res_dem_dict:
+        node_delta = round(float(epsilon/max(nodewise_res_dem_dict.get(node))),2)
+        node_deltas_dict.update({node : node_delta})
+    log(INFO,"Node deltas dict :" + str(node_deltas_dict))
+
 
 
 def get_total_demand(resource_types):
     global total_demands_dict
     for res in resource_types:
         total_demands = sum(res_dem_dict.get(res.strip()).values())
-        total_demands_dict.update({res.strip() : total_demands})
+        if total_demands != 0:
+            total_demands_dict.update({res.strip() : total_demands})
+        else:
+            log(WARN,"Total Demand for resource " + res.strip() + " is zero")
+        
     log(INFO, "Total Demands Dict : " + str(total_demands_dict))
 
 
@@ -151,7 +153,7 @@ def get_demand_vector(root, resource_types):
             for child in range (int(childs[i])):
                 res_dem = res_dict.get(root.children[i].children[child].name)
                 if res_dem != 0 and res_dem is not None:
-                    temp_dem_vect_dict.update({root.children[i].children[child].name : res_dem/float(total_demands_dict.get(res.strip()))*100})
+                    temp_dem_vect_dict.update({root.children[i].children[child].name : round(res_dem/float(total_demands_dict.get(res.strip()))*100,2)})
                 child_count += 1
         res_dem_vect_dict.update({res.strip() : temp_dem_vect_dict})
     log(INFO,"Resource Demand Vector Dict : " + str(res_dem_vect_dict))
@@ -173,8 +175,8 @@ def get_parent_vector(root, resource_types):
                 # print("Child : ", child.name)
                 if res_dem_vect.get(child.name) != 0 and res_dem_vect.get(child.name) is not None:
                     # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
-                    tot_dem_vect += res_dem_vect.get(child.name)
-                    temp_par_vect_dict.update({par.name : tot_dem_vect})
+                    tot_dem_vect += round(res_dem_vect.get(child.name),2)
+                    temp_par_vect_dict.update({par.name : round(tot_dem_vect,2)})
         res_par_vect_dict.update({res.strip() : temp_par_vect_dict})
     log(INFO,"Resource Parent Vector Dict : " + str(res_par_vect_dict)) 
 
@@ -191,22 +193,23 @@ def nodes_dem_vect_update(root, resource_types):
         temp_one_dem_vect_dict = {}
         temp_par_dom_vect_dict = {}
         one_allocated_dict = allocated_res_dict.get(res.strip())
-        # print("One Allocated Dict : ", one_allocated_dict)
-        if tot_res != 0 and tot_res is not None:
-            for par in root.children:
-                par_share_vect = 0.0
-                for child in par.children:
-                    # print("Child : ", child.name)
-                    if one_allocated_dict.get(child.name) != 0 and one_allocated_dict.get(child.name) is not None:
-                        # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
-                        dom_share_vect = float(one_allocated_dict.get(child.name))/float(tot_res)*100
-                        par_share_vect += dom_share_vect
-                        # print("Dom Share Vect : ", dom_share_vect)
-                        temp_one_dem_vect_dict.update({child.name : dom_share_vect})
-                        temp_par_dom_vect_dict.update({par.name : par_share_vect})
+        if one_allocated_dict is not None:
+            # print("One Allocated Dict : ", one_allocated_dict)
+            if tot_res != 0 and tot_res is not None:
+                for par in root.children:
+                    par_share_vect = 0.0
+                    for child in par.children:
+                        # print("Child : ", child.name)
+                        if one_allocated_dict.get(child.name) != 0 and one_allocated_dict.get(child.name) is not None:
+                            # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
+                            dom_share_vect = round(float(one_allocated_dict.get(child.name))/float(tot_res)*100,2)
+                            par_share_vect += dom_share_vect
+                            # print("Dom Share Vect : ", dom_share_vect)
+                            temp_one_dem_vect_dict.update({child.name : round(dom_share_vect,2)})
+                            temp_par_dom_vect_dict.update({par.name : round(par_share_vect,2)})
 
-        nodes_dom_vect_dict.update({res.strip() : temp_one_dem_vect_dict})
-        par_dom_vect_dict.update({res.strip() : temp_par_dom_vect_dict})
+            nodes_dom_vect_dict.update({res.strip() : temp_one_dem_vect_dict})
+            par_dom_vect_dict.update({res.strip() : temp_par_dom_vect_dict})
     log(INFO,"Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
     log(INFO,"Parents' Dominant Shares After allocation : " + str(par_dom_vect_dict))
     print("Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
@@ -230,21 +233,21 @@ def calculate_revised_dom_share(root, resource_types):
                         max_res_share = par_share
                         max_res_type = res.strip()
         # print("Max Res Share : ", max_res_share)
-        revised_par_dom_share_dict.update({par.name : max_res_share})
+        revised_par_dom_share_dict.update({par.name : round(max_res_share,2)})
     log(INFO, "Parents' updated Dominant Resource Share : " + str(revised_par_dom_share_dict))
     print("Parents' updated Dominant Resource Share : \n" + str(revised_par_dom_share_dict))
             
     
-    
-
 def update_dom_resource_list(resource_types):
     global res_dem_dict
     global resource_qty_dict
     global total_demands_dict
 
     for i in range(len(resource_types)):
-        tot_res_dem = float(total_demands_dict.get(resource_types[i].strip()))
-        total_demands_dict.update({resource_types[i].strip() : tot_res_dem/float(resource_qty_list[i])})
+        tot_res_dem = total_demands_dict.get(resource_types[i].strip())
+        if tot_res_dem != 0 and tot_res_dem is not None:
+            tot_res_dem = float(tot_res_dem)
+            total_demands_dict.update({resource_types[i].strip() : round(tot_res_dem/float(resource_qty_list[i]),2)})
     log(INFO,"Dominant Resource Dict : " + str(total_demands_dict))
   
 
@@ -267,6 +270,7 @@ def allocate_resource(root, resource, total_resource):
     
     resource_allocated = 0
     global allocated_res_dict
+    global node_deltas_dict
     global parents
     global childs
     allocated_dict = {}
@@ -279,17 +283,18 @@ def allocate_resource(root, resource, total_resource):
                         temp_dict = res_dem_dict.get(resource)
                         log(DEBUG, "Temp dict for allocation : " + str(temp_dict))
                         if temp_dict.get(child.name) is not None and  float(temp_dict.get(child.name)) > 0:
-                            ress = res_dem_dict.get(resource)
-                            resource_to_allocate = float(ress.get(child.name))*float(deltas.get(resource))
+                            # ress = res_dem_dict.get(resource)
+                            # resource_to_allocate = float(ress.get(child.name))*float(deltas_dict.get(resource))
+                            resource_to_allocate = round(node_deltas_dict.get(child.name),2) # added for modified algorithm
                             log(DEBUG,"Resource to allocate: " + str(resource_to_allocate))
                             log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + " " + resource + " to " + child.name)
-                            if resource_to_allocate <= float(total_resource) - float(resource_allocated):
+                            if resource_to_allocate <= round((float(total_resource) - float(resource_allocated)),2):
                                 if allocated_dict.get(child.name) is not None: 
-                                    allocated_dict.update({child.name : float(allocated_dict.get(child.name)) + float(resource_to_allocate)})
+                                    allocated_dict.update({child.name : round(float(allocated_dict.get(child.name)) + float(resource_to_allocate),2)})
                                     resource_allocated += resource_to_allocate
                                 else:
-                                    allocated_dict.update({child.name : float(resource_to_allocate)})
-                                    resource_allocated += resource_to_allocate
+                                    allocated_dict.update({child.name : round(float(resource_to_allocate),2)})
+                                    resource_allocated += (resource_to_allocate)
                                 log(DEBUG, "Allocated " + resource + " to " + child.name + " = " + str(resource_allocated))
                             else:
                                 resource_remining = float(total_resource) - float(resource_allocated)
@@ -322,7 +327,8 @@ par_dom_vect_dict = {}
 revised_par_dom_share_dict = {}
 
 
-deltas = {}
+deltas_dict = {}
+node_deltas_dict = {}
 delta_list_dict = {}
 dom_resource_dict = {}
 resource_qty_dict = {}
@@ -339,6 +345,8 @@ delta_list = []
 
 # All global variables used in the program
 parents = 0
+childs = 0
+epsilon = 0.0
 
 
 
@@ -363,6 +371,7 @@ def init_from_config(iniFile):
     total_children = 0
     global parents
     global childs
+    global epsilon
     global resource_types
     global demand_list
     global resource_qty_list
@@ -391,11 +400,16 @@ def init_from_config(iniFile):
            sys.exit()
 
         ###
-        delta_list =  parse_config_vector(config.get("RESOURCES", "delta"))
-        print("Delta: \t\t" + ' '.join(delta_list))
-        if(len(resource_types) != len(delta_list)):
-           print("Number of resurces and list of deltas do not match")
-           sys.exit()
+        # delta_list =  parse_config_vector(config.get("RESOURCES", "delta"))
+        # print("Delta: \t\t" + ' '.join(delta_list))
+        # if(len(resource_types) != len(delta_list)):
+        #    print("Number of resurces and list of deltas do not match")
+        #    sys.exit()
+        
+        epsilon = float(config.get("RESOURCES", "epsilon"))
+        if epsilon is None:
+            epsilon = 100.0
+        
         # else:
         #     print("Delta List : ",delta_list)
 
@@ -431,13 +445,14 @@ init_from_config(sys.argv[1])
 build_tree(parents,childs)
 
 # Update resource delta in a new dict
-update_delta_dict(delta_list, resource_types)
+# update_delta_dict(delta_list, resource_types)
 
 # Update resource demand in a new dict
 assign_resource_share(root, resource_types)
 
 # Calculate individual resource deltas and save in a new dict
-calculate_deltas(resource_types)
+# calculate_deltas(resource_types)
+calculate_node_deltas(nodewise_res_dem_dict)
 
 # Calculate the total demand for each resource
 get_total_demand(resource_types)
