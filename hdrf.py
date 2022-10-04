@@ -85,6 +85,7 @@ def assign_resource_share(root,resource_types):
     global childs
     global demand_list
     global res_dem_dict
+    global nodewise_res_dem_dict
     print("Demand List : ", demand_list)
     for r in range(len(resource_types)):
         res = resource_types[r].strip()
@@ -94,14 +95,16 @@ def assign_resource_share(root,resource_types):
             for child in range (int(childs[i])):
                 current_list = demand_list[child_count]
                 # print("Current_list : ", current_list)
-                item = current_list[r]
+                current_list[r] = int(current_list[r].strip())
                 # print ("Item : ", item.strip())
-                if int(item.strip()) !=0:
-                    res_dict.update({root.children[i].children[child].name : int(item)})
+                if int(current_list[r]) !=0:
+                    res_dict.update({root.children[i].children[child].name : current_list[r]})
                 child_count += 1
                 # print("Res Dict : ", res_dict)
+                nodewise_res_dem_dict.update({root.children[i].children[child].name : current_list})
             res_dem_dict.update({res:res_dict})
     log(INFO,"Resource Dem dict : " + str(res_dem_dict))
+    log(INFO,"Node wise Resource Dem dict : " + str(nodewise_res_dem_dict))
 
 
 def update_delta_dict(delta_list, resource_types):
@@ -114,6 +117,8 @@ def update_delta_dict(delta_list, resource_types):
     log(DEBUG,"Delta List Dict:" +str(delta_list_dict))
 
 
+
+# Need to recalculated Delta for each node
 def calculate_deltas(resource_types):
     global res_dem_dict
     for res in resource_types:
@@ -308,6 +313,7 @@ def log(level, message):
 # All dicts used in the program
 
 res_dem_dict = {}
+nodewise_res_dem_dict = {}
 res_share_dict = {}
 res_dem_vect_dict = {}
 res_par_vect_dict = {}
@@ -401,6 +407,7 @@ def init_from_config(iniFile):
            sys.exit()
         else:
             for mylist in all_demand_list:
+                # print("Mylist type = " + str(type(mylist)))
                 demand_list.append(list(mylist.split(",")))
         # print(demand_list)
     except Exception as e:
