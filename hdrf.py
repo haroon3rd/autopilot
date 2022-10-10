@@ -121,8 +121,9 @@ def assign_resource_share(root,resource_types):
 def calculate_node_deltas(nodewise_res_dem_dict):
     global node_deltas_dict
     for node in nodewise_res_dem_dict:
-        node_delta = round(float(epsilon/max(nodewise_res_dem_dict.get(node))),2)
-        node_deltas_dict.update({node : node_delta})
+        if max(nodewise_res_dem_dict.get(node)) is not None and max(nodewise_res_dem_dict.get(node)) != 0:
+            node_delta = round(float(epsilon/max(nodewise_res_dem_dict.get(node))),2)
+            node_deltas_dict.update({node : node_delta})
     log(INFO,"Node deltas dict :" + str(node_deltas_dict))
 
 
