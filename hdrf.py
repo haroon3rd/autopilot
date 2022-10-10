@@ -122,7 +122,7 @@ def calculate_node_deltas(nodewise_res_dem_dict):
     global node_deltas_dict
     for node in nodewise_res_dem_dict:
         max_delta = max(nodewise_res_dem_dict.get(node))
-        log(INFO,"Max Delta for node " + node + " is " + str(max_delta))
+        log(DEBUG,"Max Delta for node " + node + " is " + str(max_delta))
         if max_delta is not None and max_delta != 0:
             node_delta = round(float(epsilon/max_delta),8)
             log(INFO,"Node Delta for node " + node + " is " + str(node_delta))
@@ -133,9 +133,14 @@ def calculate_node_deltas(nodewise_res_dem_dict):
 
 def get_total_demand(resource_types):
     global total_demands_dict
+    global resource_qty_dict
     for res in resource_types:
         total_demands = sum(res_dem_dict.get(res.strip()).values())
         if total_demands != 0:
+            if total_demands > resource_qty_dict.get(res.strip()):
+                log(ERR,"Total demand for resource " + res.strip() + " is more than the resource quantity")
+                print("ERROR : Total demand for resource " + res.strip() + " is more than the resource quantity")
+                sys.exit(1)
             total_demands_dict.update({res.strip() : total_demands})
         else:
             log(WARN,"Total Demand for resource " + res.strip() + " is zero")
@@ -157,7 +162,7 @@ def get_demand_vector(root, resource_types):
             for child in range (int(childs[i])):
                 res_dem = res_dict.get(root.children[i].children[child].name)
                 if res_dem != 0 and res_dem is not None:
-                    temp_dem_vect_dict.update({root.children[i].children[child].name : round(res_dem/float(total_demands_dict.get(res.strip()))*100,2)})
+                    temp_dem_vect_dict.update({root.children[i].children[child].name : round(res_dem/float(total_demands_dict.get(res.strip()))*100,4)})
                 child_count += 1
         res_dem_vect_dict.update({res.strip() : temp_dem_vect_dict})
     log(INFO,"Resource Demand Vector Dict : " + str(res_dem_vect_dict))
@@ -179,8 +184,8 @@ def get_parent_vector(root, resource_types):
                 # print("Child : ", child.name)
                 if res_dem_vect.get(child.name) != 0 and res_dem_vect.get(child.name) is not None:
                     # print("Child : " + child.name + " dem vect : " + str(res_dem_vect.get(child.name)))
-                    tot_dem_vect += round(res_dem_vect.get(child.name),2)
-                    temp_par_vect_dict.update({par.name : round(tot_dem_vect,2)})
+                    tot_dem_vect += round(res_dem_vect.get(child.name),4)
+                    temp_par_vect_dict.update({par.name : round(tot_dem_vect,4)})
         res_par_vect_dict.update({res.strip() : temp_par_vect_dict})
     log(INFO,"Resource Parent Vector Dict : " + str(res_par_vect_dict)) 
 
@@ -209,8 +214,8 @@ def nodes_dem_vect_update(root, resource_types):
                             dom_share_vect = round(float(one_allocated_dict.get(child.name))/float(tot_res)*100,2)
                             par_share_vect += dom_share_vect
                             # print("Dom Share Vect : ", dom_share_vect)
-                            temp_one_dem_vect_dict.update({child.name : round(dom_share_vect,2)})
-                            temp_par_dom_vect_dict.update({par.name : round(par_share_vect,2)})
+                            temp_one_dem_vect_dict.update({child.name : round(dom_share_vect,4)})
+                            temp_par_dom_vect_dict.update({par.name : round(par_share_vect,4)})
 
             nodes_dom_vect_dict.update({res.strip() : temp_one_dem_vect_dict})
             par_dom_vect_dict.update({res.strip() : temp_par_dom_vect_dict})
@@ -237,7 +242,7 @@ def calculate_revised_dom_share(root, resource_types):
                         max_res_share = par_share
                         max_res_type = res.strip()
         # print("Max Res Share : ", max_res_share)
-        revised_par_dom_share_dict.update({par.name : round(max_res_share,2)})
+        revised_par_dom_share_dict.update({par.name : round(max_res_share,4)})
     log(INFO, "Parents' updated Dominant Resource Share : " + str(revised_par_dom_share_dict))
     print("\nParents' updated Dominant Resource Share : \n" + str(revised_par_dom_share_dict))
             
@@ -251,14 +256,14 @@ def update_dom_resource_list(resource_types):
         tot_res_dem = total_demands_dict.get(resource_types[i].strip())
         if tot_res_dem != 0 and tot_res_dem is not None:
             tot_res_dem = float(tot_res_dem)
-            total_demands_dict.update({resource_types[i].strip() : round(tot_res_dem/float(resource_qty_list[i]),2)})
+            total_demands_dict.update({resource_types[i].strip() : round(tot_res_dem/float(resource_qty_list[i]),4)})
     log(INFO,"Dominant Resource Dict : " + str(total_demands_dict))
   
 
 def update_res_alloc_order():
     global res_alloc_order
     res_alloc_order = sorted(total_demands_dict, key=total_demands_dict.get, reverse=True)
-    print("Resource allocation order: " + str(res_alloc_order))
+    print("Resource allocation order: " + str(res_alloc_order) + "\n")
 
 def update_resource_qty_dict():
     global resource_qty_dict
@@ -451,6 +456,9 @@ init_from_config(sys.argv[1])
 # Create the organization of the nodes
 build_tree(parents,childs)
 
+# Update resources quantity dict for use in allocation
+update_resource_qty_dict()
+
 # Update resource delta in a new dict
 # update_delta_dict(delta_list, resource_types)
 
@@ -476,9 +484,6 @@ update_dom_resource_list(resource_types)
 # Calculate the resource allocation order from dominant resources
 update_res_alloc_order()
 
-# Update resources quantity dict for use in allocation
-update_resource_qty_dict()
-
 # log(INFO, "Resource quantity list: " + str(resource_qty_list))
 log(INFO, "Resource quantity dict: " + str(resource_qty_dict))
 log(INFO, "Resource allocation order: " + str(res_alloc_order))
@@ -488,8 +493,9 @@ for resource in res_alloc_order:
     total_resource = resource_qty_dict.get(str(resource.strip()))
     log(INFO, "Total " + resource + " available: " + str(total_resource))
     allocate_resource(root, resource.strip(), total_resource)
+    print("Final " + resource + " allocation : " + str(allocated_res_dict.get(str(resource.strip()))))
 log(INFO, "Final allocation : " + str(allocated_res_dict))
-print("\nFinal allocation : ",allocated_res_dict)
+# print("\nFinal allocation : ",allocated_res_dict)
 
 # Update individual child nodes' dominant share vector
 nodes_dem_vect_update(root, resource_types)
@@ -500,6 +506,6 @@ nodes_dem_vect_update(root, resource_types)
 # Calculated revised parent's dominant share vector after primary allocation
 calculate_revised_dom_share(root, resource_types)
 
-log(INFO, "Total run time is %s seconds!" % (time.time() - start_time))
+log(INFO, "Total run time is %s miliseconds!" % round(1000*(time.time() - start_time),4))
 sys.exit()
 

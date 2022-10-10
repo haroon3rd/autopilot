@@ -192,3 +192,337 @@
 2022-10-10 14:53:19,044 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 22.22, 'N2': 55.56, 'N3': 22.21}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}}
 2022-10-10 14:53:19,044 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 55.56, 'N3': 27.02}
 2022-10-10 14:53:19,044 | INFO : Total run time is 0.07347655296325684 seconds!
+2022-10-10 14:54:59,700 | INFO : **********************************************
+2022-10-10 14:54:59,701 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 100, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 14:54:59,701 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [100, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 14:54:59,701 | INFO : Max Delta for node N11 is 200
+2022-10-10 14:54:59,701 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 14:54:59,701 | INFO : Max Delta for node N21 is 500
+2022-10-10 14:54:59,701 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 14:54:59,701 | INFO : Max Delta for node N31 is 100
+2022-10-10 14:54:59,701 | INFO : Node Delta for node N31 is 0.1
+2022-10-10 14:54:59,701 | INFO : Max Delta for node N32 is 100
+2022-10-10 14:54:59,702 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 14:54:59,702 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.1, 'N32': 0.1}
+2022-10-10 14:54:59,702 | INFO : Total Demands Dict : {'cpu': 900, 'mem': 370, 'bw': 80}
+2022-10-10 14:54:59,702 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 22.22, 'N21': 55.56, 'N31': 11.11, 'N32': 11.11}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 14:54:59,702 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 22.22, 'N2': 55.56, 'N3': 22.22}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 14:54:59,702 | INFO : Dominant Resource Dict : {'cpu': 0.75, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 14:54:59,702 | INFO : Resource quantity dict: {'cpu': 1200, 'mem': 1000, 'bw': 85}
+2022-10-10 14:54:59,702 | INFO : Resource allocation order: ['bw', 'cpu', 'mem']
+2022-10-10 14:54:59,702 | INFO : Total bw available: 85
+2022-10-10 14:54:59,705 | INFO : Total cpu available: 1200
+2022-10-10 14:54:59,732 | INFO : Total mem available: 1000
+2022-10-10 14:54:59,757 | INFO : Final allocation : {'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'cpu': {'N11': 266.64, 'N21': 666.72, 'N31': 133.32, 'N32': 133.2089}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 14:54:59,758 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 22.22, 'N21': 55.56, 'N31': 11.11, 'N32': 11.1}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 14:54:59,758 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 22.22, 'N2': 55.56, 'N3': 22.21}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 14:54:59,758 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 55.56, 'N3': 75.0}
+2022-10-10 14:54:59,758 | INFO : Total run time is 0.05789661407470703 seconds!
+2022-10-10 14:57:07,048 | INFO : **********************************************
+2022-10-10 14:57:07,049 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 100, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 14:57:07,049 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [100, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 14:57:07,049 | INFO : Max Delta for node N11 is 200
+2022-10-10 14:57:07,049 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 14:57:07,049 | INFO : Max Delta for node N21 is 500
+2022-10-10 14:57:07,049 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 14:57:07,049 | INFO : Max Delta for node N31 is 100
+2022-10-10 14:57:07,049 | INFO : Node Delta for node N31 is 0.1
+2022-10-10 14:57:07,049 | INFO : Max Delta for node N32 is 100
+2022-10-10 14:57:07,049 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 14:57:07,049 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.1, 'N32': 0.1}
+2022-10-10 14:57:07,049 | INFO : Total Demands Dict : {'cpu': 900, 'mem': 370, 'bw': 80}
+2022-10-10 14:57:07,049 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 22.22, 'N21': 55.56, 'N31': 11.11, 'N32': 11.11}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 14:57:07,049 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 22.22, 'N2': 55.56, 'N3': 22.22}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 14:57:07,049 | INFO : Dominant Resource Dict : {'cpu': 0.75, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 14:57:07,050 | INFO : Resource quantity dict: {'cpu': 1200, 'mem': 1000, 'bw': 85}
+2022-10-10 14:57:07,050 | INFO : Resource allocation order: ['bw', 'cpu', 'mem']
+2022-10-10 14:57:07,050 | INFO : Total bw available: 85
+2022-10-10 14:57:07,052 | INFO : Total cpu available: 1200
+2022-10-10 14:57:07,091 | INFO : Total mem available: 1000
+2022-10-10 14:57:07,117 | INFO : Final allocation : {'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'cpu': {'N11': 266.64, 'N21': 666.72, 'N31': 133.32, 'N32': 133.2089}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 14:57:07,117 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 22.22, 'N21': 55.56, 'N31': 11.11, 'N32': 11.1}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 14:57:07,117 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 22.22, 'N2': 55.56, 'N3': 22.21}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 14:57:07,117 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 55.56, 'N3': 75.0}
+2022-10-10 14:57:07,117 | INFO : Total run time is 0.07003092765808105 seconds!
+2022-10-10 15:21:58,593 | INFO : **********************************************
+2022-10-10 15:21:58,593 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:21:58,594 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:21:58,594 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:21:58,594 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:21:58,594 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:21:58,594 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:21:58,594 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:21:58,594 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:21:58,594 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:21:58,594 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:21:58,594 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:21:58,594 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 15:21:58,594 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:21:58,594 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:21:58,594 | INFO : Dominant Resource Dict : {'cpu': 0.83, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 15:21:58,594 | INFO : Resource quantity dict: {'cpu': 1200, 'mem': 1000, 'bw': 85}
+2022-10-10 15:21:58,594 | INFO : Resource allocation order: ['bw', 'cpu', 'mem']
+
+2022-10-10 15:21:58,595 | INFO : Total bw available: 85
+2022-10-10 15:21:58,596 | INFO : Total cpu available: 1200
+2022-10-10 15:21:58,625 | INFO : Total mem available: 1000
+2022-10-10 15:21:58,655 | INFO : Final allocation : {'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'cpu': {'N11': 240.0, 'N21': 600.0, 'N31': 240.0, 'N32': 119.9}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 15:21:58,655 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:21:58,655 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:21:58,655 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 15:21:58,655 | INFO : Total run time is 0.06280207633972168 seconds!
+2022-10-10 15:22:38,710 | INFO : **********************************************
+2022-10-10 15:22:38,711 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:22:38,711 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:22:38,711 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:22:38,711 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:22:38,712 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:22:38,712 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:22:38,712 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:22:38,712 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:22:38,712 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:22:38,712 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:22:38,712 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:22:38,712 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 15:22:38,712 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:22:38,712 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:22:38,712 | INFO : Dominant Resource Dict : {'cpu': 0.83, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 15:22:38,712 | INFO : Resource quantity dict: {'cpu': 1200, 'mem': 1000, 'bw': 85}
+2022-10-10 15:22:38,712 | INFO : Resource allocation order: ['bw', 'cpu', 'mem']
+2022-10-10 15:22:38,712 | INFO : Total bw available: 85
+2022-10-10 15:22:38,715 | INFO : Total cpu available: 1200
+2022-10-10 15:22:38,743 | INFO : Total mem available: 1000
+2022-10-10 15:22:38,771 | INFO : Final allocation : {'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'cpu': {'N11': 240.0, 'N21': 600.0, 'N31': 240.0, 'N32': 119.9}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 15:22:38,771 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:22:38,771 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:22:38,771 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 15:22:38,771 | INFO : Total run time is 0.06112337112426758 seconds!
+2022-10-10 15:26:35,262 | INFO : **********************************************
+2022-10-10 15:26:35,263 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:26:35,263 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:26:35,263 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:26:35,263 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:26:35,263 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:26:35,263 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:26:35,263 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:26:35,263 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:26:35,264 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:26:35,264 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:26:35,264 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:27:48,446 | INFO : **********************************************
+2022-10-10 15:27:48,447 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:27:48,447 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:27:48,447 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:27:48,447 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:27:48,447 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:27:48,447 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:27:48,447 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:27:48,447 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:27:48,447 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:27:48,447 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:27:48,447 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:27:48,447 | WARNING : Total Demand for resource cpu is zero
+2022-10-10 15:27:48,447 | WARNING : Total Demand for resource mem is zero
+2022-10-10 15:27:48,447 | WARNING : Total Demand for resource bw is zero
+2022-10-10 15:27:48,447 | INFO : Total Demands Dict : {}
+2022-10-10 15:30:04,420 | INFO : **********************************************
+2022-10-10 15:30:04,421 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:30:04,421 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:30:04,421 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:30:04,421 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:30:04,421 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:30:04,421 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:30:04,421 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:30:04,421 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:30:04,421 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:30:04,421 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:30:04,421 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:30:04,421 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 15:30:04,421 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:30:04,421 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:30:04,421 | INFO : Dominant Resource Dict : {'cpu': 0.83, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 15:30:04,422 | INFO : Resource quantity dict: {'cpu': 1200, 'mem': 1000, 'bw': 85}
+2022-10-10 15:30:04,422 | INFO : Resource allocation order: ['bw', 'cpu', 'mem']
+2022-10-10 15:30:04,422 | INFO : Total bw available: 85
+2022-10-10 15:30:04,424 | INFO : Total cpu available: 1200
+2022-10-10 15:30:04,457 | INFO : Total mem available: 1000
+2022-10-10 15:30:04,484 | INFO : Final allocation : {'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'cpu': {'N11': 240.0, 'N21': 600.0, 'N31': 240.0, 'N32': 119.9}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 15:30:04,484 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:30:04,484 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:30:04,484 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 15:30:04,484 | INFO : Total run time is 0.06461167335510254 seconds!
+2022-10-10 15:30:18,918 | INFO : **********************************************
+2022-10-10 15:30:18,919 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:30:18,919 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:30:18,919 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:30:18,919 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:30:18,919 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:30:18,919 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:30:18,919 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:30:18,919 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:30:18,919 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:30:18,919 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:30:18,919 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:30:18,919 | ERROR : Total demand for resource cpu is more than the resource quantity
+2022-10-10 15:32:58,618 | INFO : **********************************************
+2022-10-10 15:32:58,618 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:32:58,618 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:32:58,618 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:32:58,618 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:32:58,618 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:32:58,619 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:32:58,619 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:32:58,619 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:32:58,619 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:32:58,619 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:32:58,619 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:32:58,619 | ERROR : Total demand for resource cpu is more than the resource quantity
+2022-10-10 15:33:17,371 | INFO : **********************************************
+2022-10-10 15:33:17,372 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:33:17,372 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:33:17,372 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:33:17,372 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:33:17,372 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:33:17,372 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:33:17,372 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:33:17,372 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:33:17,372 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:33:17,372 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:33:17,372 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:33:17,372 | ERROR : Total demand for resource cpu is more than the resource quantity
+2022-10-10 15:33:24,245 | INFO : **********************************************
+2022-10-10 15:33:24,245 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:33:24,246 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:33:24,246 | INFO : Max Delta for node N11 is 200
+2022-10-10 15:33:24,246 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:33:24,246 | INFO : Max Delta for node N21 is 500
+2022-10-10 15:33:24,246 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:33:24,246 | INFO : Max Delta for node N31 is 200
+2022-10-10 15:33:24,246 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:33:24,246 | INFO : Max Delta for node N32 is 100
+2022-10-10 15:33:24,246 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:33:24,246 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:33:24,246 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 15:33:24,246 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:33:24,246 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:33:24,246 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 15:33:24,246 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 15:33:24,246 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 15:33:24,246 | INFO : Total cpu available: 1000
+2022-10-10 15:33:24,276 | INFO : Total bw available: 85
+2022-10-10 15:33:24,277 | INFO : Total mem available: 1000
+2022-10-10 15:33:24,304 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 15:33:24,304 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:33:24,304 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:33:24,304 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 15:33:24,304 | INFO : Total run time is 0.059668779373168945 seconds!
+2022-10-10 15:34:41,002 | INFO : **********************************************
+2022-10-10 15:34:41,003 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 15:34:41,003 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 15:34:41,003 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 15:34:41,003 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 15:34:41,003 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 15:34:41,003 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 15:34:41,003 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 15:34:41,003 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 15:34:41,003 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:34:41,003 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:34:41,003 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.94}
+2022-10-10 15:34:41,004 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 15:34:41,004 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 15:34:41,004 | INFO : Total cpu available: 1000
+2022-10-10 15:34:41,028 | INFO : Total bw available: 85
+2022-10-10 15:34:41,029 | INFO : Total mem available: 1000
+2022-10-10 15:34:41,055 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 15:34:41,055 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 15:34:41,056 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 15:34:41,056 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 15:34:41,056 | INFO : Total run time is 0.05410623550415039 seconds!
+2022-10-10 17:07:11,882 | INFO : **********************************************
+2022-10-10 17:07:11,882 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 17:07:11,882 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 17:07:11,882 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 17:07:11,882 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 17:07:11,883 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 17:07:11,883 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 17:07:11,883 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 17:07:11,883 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 17:07:11,883 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.4324, 'N21': 40.5405, 'N31': 12.1622, 'N32': 14.8649}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:07:11,883 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.4324, 'N2': 40.5405, 'N3': 27.0271}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:07:11,883 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.9412}
+2022-10-10 17:07:11,883 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 17:07:11,883 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 17:07:11,883 | INFO : Total cpu available: 1000
+2022-10-10 17:07:11,902 | INFO : Total bw available: 85
+2022-10-10 17:07:11,903 | INFO : Total mem available: 1000
+2022-10-10 17:07:11,933 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 17:07:11,933 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:07:11,933 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:07:11,934 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 17:07:11,934 | INFO : Total run time is 0.05252957344055176 seconds!
+2022-10-10 17:08:41,511 | INFO : **********************************************
+2022-10-10 17:08:41,512 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 17:08:41,512 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 17:08:41,512 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 17:08:41,512 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 17:08:41,512 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 17:08:41,512 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 17:08:41,512 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 17:08:41,512 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 17:08:41,512 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.4324, 'N21': 40.5405, 'N31': 12.1622, 'N32': 14.8649}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:08:41,512 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.4324, 'N2': 40.5405, 'N3': 27.0271}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:08:41,512 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.9412}
+2022-10-10 17:08:41,512 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 17:08:41,513 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 17:08:41,513 | INFO : Total cpu available: 1000
+2022-10-10 17:08:41,540 | INFO : Total bw available: 85
+2022-10-10 17:08:41,541 | INFO : Total mem available: 1000
+2022-10-10 17:08:41,570 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 17:08:41,570 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:08:41,570 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:08:41,571 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 17:08:41,571 | INFO : Total run time is 0.05972219 seconds!
+2022-10-10 17:08:52,969 | INFO : **********************************************
+2022-10-10 17:08:52,970 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 17:08:52,970 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 17:08:52,970 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 17:08:52,970 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 17:08:52,970 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 17:08:52,970 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 17:08:52,970 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 17:08:52,970 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 17:08:52,970 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.4324, 'N21': 40.5405, 'N31': 12.1622, 'N32': 14.8649}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:08:52,970 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.4324, 'N2': 40.5405, 'N3': 27.0271}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:08:52,970 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.9412}
+2022-10-10 17:08:52,970 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 17:08:52,970 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 17:08:52,970 | INFO : Total cpu available: 1000
+2022-10-10 17:08:52,999 | INFO : Total bw available: 85
+2022-10-10 17:08:53,001 | INFO : Total mem available: 1000
+2022-10-10 17:08:53,029 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 17:08:53,030 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:08:53,030 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:08:53,030 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 17:08:53,030 | INFO : Total run time is 0.0618 seconds!
+2022-10-10 17:09:21,686 | INFO : **********************************************
+2022-10-10 17:09:21,687 | INFO : Resource Demand dict : {'cpu': {'N11': 200, 'N21': 500, 'N31': 200, 'N32': 100}, 'mem': {'N11': 120, 'N21': 150, 'N31': 45, 'N32': 55}, 'bw': {'N21': 20, 'N31': 25, 'N32': 35}}
+2022-10-10 17:09:21,687 | INFO : Node wise Resource Dem dict : {'N11': [200, 120, 0], 'N21': [500, 150, 20], 'N31': [200, 45, 25], 'N32': [100, 55, 35]}
+2022-10-10 17:09:21,687 | INFO : Node Delta for node N11 is 0.05
+2022-10-10 17:09:21,687 | INFO : Node Delta for node N21 is 0.02
+2022-10-10 17:09:21,687 | INFO : Node Delta for node N31 is 0.05
+2022-10-10 17:09:21,687 | INFO : Node Delta for node N32 is 0.1
+2022-10-10 17:09:21,687 | INFO : Node deltas dict :{'N11': 0.05, 'N21': 0.02, 'N31': 0.05, 'N32': 0.1}
+2022-10-10 17:09:21,687 | INFO : Total Demands Dict : {'cpu': 1000, 'mem': 370, 'bw': 80}
+2022-10-10 17:09:21,687 | INFO : Resource Demand Vector Dict : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 10.0}, 'mem': {'N11': 32.4324, 'N21': 40.5405, 'N31': 12.1622, 'N32': 14.8649}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:09:21,687 | INFO : Resource Parent Vector Dict : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 30.0}, 'mem': {'N1': 32.4324, 'N2': 40.5405, 'N3': 27.0271}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:09:21,687 | INFO : Dominant Resource Dict : {'cpu': 1.0, 'mem': 0.37, 'bw': 0.9412}
+2022-10-10 17:09:21,687 | INFO : Resource quantity dict: {'cpu': 1000, 'mem': 1000, 'bw': 85}
+2022-10-10 17:09:21,688 | INFO : Resource allocation order: ['cpu', 'bw', 'mem']
+2022-10-10 17:09:21,688 | INFO : Total cpu available: 1000
+2022-10-10 17:09:21,717 | INFO : Total bw available: 85
+2022-10-10 17:09:21,719 | INFO : Total mem available: 1000
+2022-10-10 17:09:21,753 | INFO : Final allocation : {'cpu': {'N11': 200.0, 'N21': 500.0, 'N31': 200.0, 'N32': 99.9}, 'bw': {'N21': 21.25, 'N31': 26.5625, 'N32': 37.1875}, 'mem': {'N11': 324.3, 'N21': 405.4, 'N31': 121.6, 'N32': 148.6}}
+2022-10-10 17:09:21,754 | INFO : Child nodes' Dominant Shares after allocation : {'cpu': {'N11': 20.0, 'N21': 50.0, 'N31': 20.0, 'N32': 9.99}, 'mem': {'N11': 32.43, 'N21': 40.54, 'N31': 12.16, 'N32': 14.86}, 'bw': {'N21': 25.0, 'N31': 31.25, 'N32': 43.75}}
+2022-10-10 17:09:21,754 | INFO : Parents' Dominant Shares After allocation : {'cpu': {'N1': 20.0, 'N2': 50.0, 'N3': 29.99}, 'mem': {'N1': 32.43, 'N2': 40.54, 'N3': 27.02}, 'bw': {'N2': 25.0, 'N3': 75.0}}
+2022-10-10 17:09:21,754 | INFO : Parents' updated Dominant Resource Share : {'N1': 32.43, 'N2': 50.0, 'N3': 75.0}
+2022-10-10 17:09:21,754 | INFO : Total run time is 68.2249 miliseconds!
