@@ -77,7 +77,7 @@ def preTravTree(root):
                 # then remove the parent from the stack.
         if flag == 0:
             Stack.pop()
-    print("Organizational Structure : ",Preorder)
+    print("\nOrganizational Structure : ",Preorder)
 
 
 def assign_resource_share(root,resource_types):
@@ -213,7 +213,7 @@ def nodes_dem_vect_update(root, resource_types):
             par_dom_vect_dict.update({res.strip() : temp_par_dom_vect_dict})
     log(INFO,"Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
     log(INFO,"Parents' Dominant Shares After allocation : " + str(par_dom_vect_dict))
-    print("Child nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
+    print("\nChild nodes' Dominant Shares after allocation : " + str(nodes_dom_vect_dict))
     print("Parents' Dominant Shares After allocation : " + str(par_dom_vect_dict))
 
 def calculate_revised_dom_share(root, resource_types):
@@ -236,7 +236,7 @@ def calculate_revised_dom_share(root, resource_types):
         # print("Max Res Share : ", max_res_share)
         revised_par_dom_share_dict.update({par.name : round(max_res_share,2)})
     log(INFO, "Parents' updated Dominant Resource Share : " + str(revised_par_dom_share_dict))
-    print("Parents' updated Dominant Resource Share : \n" + str(revised_par_dom_share_dict))
+    print("\nParents' updated Dominant Resource Share : \n" + str(revised_par_dom_share_dict))
             
     
 def update_dom_resource_list(resource_types):
@@ -266,8 +266,8 @@ def update_resource_qty_dict():
     # print("Resource qty list: " + str(resource_qty_list))
 
 def allocate_resource(root, resource, total_resource):
-    print("Allocating resource: " + resource,end="")
-    log(INFO, "Allocating resource: " + resource)
+    # print("Allocating resource: " + resource,end="")
+    # log(INFO, "Allocating resource: " + resource)
     
     resource_allocated = 0
     global allocated_res_dict
@@ -304,7 +304,7 @@ def allocate_resource(root, resource, total_resource):
                                 break                
         log(DEBUG,"Allocated incremental dict: " + str(allocated_dict))
         allocated_res_dict.update({resource : allocated_dict})
-    print("....done")
+    # print("....done")
 
 
 # Log helper function
@@ -328,9 +328,9 @@ par_dom_vect_dict = {}
 revised_par_dom_share_dict = {}
 
 
-deltas_dict = {}
-node_deltas_dict = {}
-delta_list_dict = {}
+# deltas_dict = {}
+# node_deltas_dict = {}
+# delta_list_dict = {}
 dom_resource_dict = {}
 resource_qty_dict = {}
 allocated_res_dict = {}
@@ -453,7 +453,7 @@ assign_resource_share(root, resource_types)
 
 # Calculate individual resource deltas and save in a new dict
 # calculate_deltas(resource_types)
-calculate_node_deltas(nodewise_res_dem_dict)
+# calculate_node_deltas(nodewise_res_dem_dict)
 
 # Calculate the total demand for each resource
 get_total_demand(resource_types)
@@ -483,7 +483,7 @@ for resource in res_alloc_order:
     log(INFO, "Total " + resource + " available: " + str(total_resource))
     allocate_resource(root, resource.strip(), total_resource)
 log(INFO, "Final allocation : " + str(allocated_res_dict))
-print("Final allocation :\n",allocated_res_dict)
+print("\nFinal allocation : ",allocated_res_dict)
 
 # Update individual child nodes' dominant share vector
 nodes_dem_vect_update(root, resource_types)
