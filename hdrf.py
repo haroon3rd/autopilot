@@ -121,8 +121,11 @@ def assign_resource_share(root,resource_types):
 def calculate_node_deltas(nodewise_res_dem_dict):
     global node_deltas_dict
     for node in nodewise_res_dem_dict:
-        if max(nodewise_res_dem_dict.get(node)) is not None and max(nodewise_res_dem_dict.get(node)) != 0:
-            node_delta = round(float(epsilon/max(nodewise_res_dem_dict.get(node))),2)
+        max_delta = max(nodewise_res_dem_dict.get(node))
+        log(INFO,"Max Delta for node " + node + " is " + str(max_delta))
+        if max_delta is not None and max_delta != 0:
+            node_delta = round(float(epsilon/max_delta),8)
+            log(INFO,"Node Delta for node " + node + " is " + str(node_delta))
             node_deltas_dict.update({node : node_delta})
     log(INFO,"Node deltas dict :" + str(node_deltas_dict))
 
@@ -275,32 +278,35 @@ def allocate_resource(root, resource, total_resource):
     global parents
     global childs
     allocated_dict = {}
+    # temp_dict = res_dem_dict.get(resource)
+    res_d_v_d = res_dem_vect_dict.get(resource)
     if root and total_resource is not None:
-        res_break = 0
-        while res_break == 0:
+        loop_break = 0
+        while loop_break == 0:
             for parent in root.children:
                 for child in parent.children:
                     if isLeafNode(child):
-                        temp_dict = res_dem_dict.get(resource)
-                        log(DEBUG, "Temp dict for allocation : " + str(temp_dict))
-                        if temp_dict.get(child.name) is not None and  float(temp_dict.get(child.name)) > 0:
-                            # ress = res_dem_dict.get(resource)
-                            # resource_to_allocate = float(ress.get(child.name))*float(deltas_dict.get(resource))
-                            resource_to_allocate = round(temp_dict.get(child.name),2) # added for modified algorithm
+                        # resource_to_allocate = node_deltas_dict.get(child.name)
+                        res_d_v_d_node = res_d_v_d.get(child.name)
+                        # log(INFO, "Temp dict for " + resource + " allocation : " + str(resource_to_allocate))
+                        # if res_d_v_d_node is not None and res_d_v_d_node !=0 and resource_to_allocate is not None and  resource_to_allocate > 0:
+                        if res_d_v_d_node is not None and res_d_v_d_node !=0:
+                            resource_to_allocate = float(res_d_v_d_node) / 100
                             log(DEBUG,"Resource to allocate: " + str(resource_to_allocate))
                             log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + " " + resource + " to " + child.name)
-                            if resource_to_allocate <= round((float(total_resource) - float(resource_allocated)),2):
+                            if resource_to_allocate <= (float(total_resource) - float(resource_allocated)):
                                 if allocated_dict.get(child.name) is not None: 
-                                    allocated_dict.update({child.name : round(float(allocated_dict.get(child.name)) + float(resource_to_allocate),2)})
+                                    allocated_dict.update({child.name : round(float(allocated_dict.get(child.name)) + float(resource_to_allocate),4)})
+                                    # allocated_dict.update({child.name : round(float(allocated_dict.get(child.name)) + float(res_d_v_d_node * resource_to_allocate/(100*resource_to_allocate)),4)})
                                     resource_allocated += resource_to_allocate
                                 else:
-                                    allocated_dict.update({child.name : round(float(resource_to_allocate),2)})
+                                    allocated_dict.update({child.name : round(float(resource_to_allocate),4)})
                                     resource_allocated += (resource_to_allocate)
                                 log(DEBUG, "Allocated " + resource + " to " + child.name + " = " + str(resource_allocated))
                             else:
                                 resource_remining = float(total_resource) - float(resource_allocated)
                                 log(DEBUG, "Not enough : " + resource + " remaining for further alocation.")
-                                res_break = 1
+                                loop_break = 1
                                 break                
         log(DEBUG,"Allocated incremental dict: " + str(allocated_dict))
         allocated_res_dict.update({resource : allocated_dict})
@@ -329,7 +335,7 @@ revised_par_dom_share_dict = {}
 
 
 # deltas_dict = {}
-# node_deltas_dict = {}
+node_deltas_dict = {}
 # delta_list_dict = {}
 dom_resource_dict = {}
 resource_qty_dict = {}
@@ -453,7 +459,7 @@ assign_resource_share(root, resource_types)
 
 # Calculate individual resource deltas and save in a new dict
 # calculate_deltas(resource_types)
-# calculate_node_deltas(nodewise_res_dem_dict)
+calculate_node_deltas(nodewise_res_dem_dict)
 
 # Calculate the total demand for each resource
 get_total_demand(resource_types)
