@@ -103,7 +103,7 @@ def assign_resource_share(root,resource_types):
                 # print("Res Dict : ", res_dict)
                 nodewise_res_dem_dict.update({root.children[i].children[child].name : current_list})
             res_dem_dict.update({res:res_dict})
-    log(INFO,"Resource Dem dict : " + str(res_dem_dict))
+    log(INFO,"Resource Demand dict : " + str(res_dem_dict))
     log(INFO,"Node wise Resource Dem dict : " + str(nodewise_res_dem_dict))
 
 
@@ -286,7 +286,7 @@ def allocate_resource(root, resource, total_resource):
                         if temp_dict.get(child.name) is not None and  float(temp_dict.get(child.name)) > 0:
                             # ress = res_dem_dict.get(resource)
                             # resource_to_allocate = float(ress.get(child.name))*float(deltas_dict.get(resource))
-                            resource_to_allocate = round(node_deltas_dict.get(child.name),2) # added for modified algorithm
+                            resource_to_allocate = round(temp_dict.get(child.name),2) # added for modified algorithm
                             log(DEBUG,"Resource to allocate: " + str(resource_to_allocate))
                             log(DEBUG, "Trying to Allocate " + str(resource_to_allocate) + " " + resource + " to " + child.name)
                             if resource_to_allocate <= round((float(total_resource) - float(resource_allocated)),2):
@@ -302,7 +302,7 @@ def allocate_resource(root, resource, total_resource):
                                 log(DEBUG, "Not enough : " + resource + " remaining for further alocation.")
                                 res_break = 1
                                 break                
-        log(DEBUG,"Allocated dict: " + str(allocated_dict))
+        log(DEBUG,"Allocated incremental dict: " + str(allocated_dict))
         allocated_res_dict.update({resource : allocated_dict})
     print("....done")
 
@@ -487,6 +487,9 @@ print("Final allocation :\n",allocated_res_dict)
 
 # Update individual child nodes' dominant share vector
 nodes_dem_vect_update(root, resource_types)
+
+# log(INFO,"Allocated dict: " + str(allocated_res_dict))
+# print("Allocated dict: " + str(allocated_res_dict))
 
 # Calculated revised parent's dominant share vector after primary allocation
 calculate_revised_dom_share(root, resource_types)
